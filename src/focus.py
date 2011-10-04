@@ -70,8 +70,7 @@ class Focus:
         return gtk.TRUE
     
     def get_filename(self, t):
-        return pglobals.data_dir + time.strftime("%Y-%m-%d", t)
-
+        return pglobals.data_base % {'date': time.strftime("%Y-%m-%d", t)}
         
 def focus_factory(applet, iid):
     Focus(applet, iid)
