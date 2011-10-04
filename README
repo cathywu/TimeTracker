@@ -3,5 +3,10 @@
 * xprintidle
 * xdotool
 
+Install these using: sudo apt-get install <DEPENDENCY>
+
 === SETUP ===
-Set data_dir in src/focus_globals.py, then add src/focus.py to startup applications (or just run it manually).
+Set data_dir in src/focus_globals.py
+In Ubuntu, run gnome-session-properties and add startup applications:
+    <PATH-TO-TIMETRACKER>/src/focus.py >> /tmp/timetracker.log
+Alternatively, just run it manually
