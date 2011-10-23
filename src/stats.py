@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import focus_globals as CONFIG
 from focus_globals import FILTERS
-import pickle, pprint, os, re, time
+import fileinput, glob, pickle, pprint, os, re, time
 
 """
 Compute statistics for computer usage and for specific text-based filters
@@ -61,19 +61,18 @@ files = os.listdir(CONFIG.data_dir)
 
 # load existing data if possible
 if os.path.isfile('%s/counts.dump' % CONFIG.stat_dir) and \
-    os.path.isfile('%s/status.dump' % CONFIG.stat_dir):
+    os.path.isfile('%s/indices.dump' % CONFIG.stat_dir):
     counts = pickle.load(open('%s/counts.dump' % CONFIG.stat_dir))
-    status = pickle.load(open('%s/status.dump' % CONFIG.stat_dir))
     indices = pickle.load(open('%s/indices.dump' % CONFIG.stat_dir))
 else:
     counts = {}
-    status = {}
     indices = {}
+
+print "Time to load data: %s" % (time.time()-starttime)
 
 # clear today's data
 if time.strftime("%Y-%m-%d") in counts:
     del counts[time.strftime("%Y-%m-%d")]
-    del status[time.strftime("%Y-%m-%d")]
     del indices[time.strftime("%Y-%m-%d")]
 
 # aggregate data, accounting for multiple machines
@@ -82,28 +81,29 @@ for afile in files:
     matches = date.groupdict()
     date = matches['date']
     device = matches['device']
-
-    logs = open(afile)
-    indices[date] = index([x.split("=>", 1)[1] for x in logs.readlines()])
     
-    if not date in counts:
-        counts[date] = {}
-        status[date] = {}
+    if date in counts:
+        print "Passing on %s" % afile
+        continue
+
+    counts[date] = {}
+    print "debug %s" % afile
+    indices[date] = index([x.split("=>", 1)[1] for x in fileinput.input(glob.glob("%s-*.txt" % date))])
+
     for (fname,fpattern) in FILTERS:
         if not fname in counts[date]:
             counts[date][fname] = 0
-            status[date][fname] = {}
-        if not device in status[date][fname]:
-            logs = open(afile)
-            for log in logs:
-                if re.search(fpattern,u(log), re.UNICODE):
-                    counts[date][fname] += 1
-        status[date][fname][device] = 1
+        for log in fileinput.input(glob.glob("%s-*.txt" % date)):
+            if re.search(fpattern,u(log), re.UNICODE):
+                counts[date][fname] += 1
+
+print "Time to aggregate data: %s" % (time.time()-starttime)
 
 # save status
 pickle.dump(counts, open("%s/counts.dump" % CONFIG.stat_dir, 'w'))
-pickle.dump(status, open("%s/status.dump" % CONFIG.stat_dir, 'w'))
 pickle.dump(indices, open("%s/indices.dump" % CONFIG.stat_dir, 'w'))
+
+print "Time to save data: %s" % (time.time()-starttime)
 
 # order the data by date
 ordered_counts = sorted(counts.iteritems(),key=lambda date_data: date_data[0])
@@ -146,4 +146,4 @@ for i in [1,3,7,14,28,56,112]:
             averages[key] = totals[key]/i
         pprint.pprint(averages)
 
-print "Computation time: %s" % (time.time()-starttime)
+print "Time to compute averages: %s" % (time.time()-starttime)
