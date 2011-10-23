@@ -57,11 +57,15 @@ class Focus:
             return gtk.TRUE
         inp = os.popen("xdotool getwindowfocus | xargs xprop _NET_WM_NAME -id")
         result = re.match('_NET_WM_NAME\(UTF8_STRING\) = "(?P<window_name>.*)"', inp.readline())
+
+        # skip queries that don't match regex
+        # FIXME figure out why they don't match
         if not result:
             return gtk.TRUE
         nm = result.groupdict()['window_name']
         if not nm:
             return gtk.TRUE
+        nm = result.groupdict()['window_name']
         tm = time.localtime()
         f = open(self.get_filename(tm), "a")
         tofday = time.strftime("%H:%M:%S", tm)
@@ -70,8 +74,7 @@ class Focus:
         return gtk.TRUE
     
     def get_filename(self, t):
-        return pglobals.data_dir + time.strftime("%Y-%m-%d", t)
-
+        return pglobals.data_base % {'date': time.strftime("%Y-%m-%d", t)}
         
 def focus_factory(applet, iid):
     Focus(applet, iid)
