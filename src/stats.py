@@ -82,17 +82,16 @@ for afile in files:
     date = matches['date']
     device = matches['device']
     
-    if date in counts:
-        print "Passing on %s" % afile
-        continue
+    if not date in counts:
+        counts[date] = {}
 
-    counts[date] = {}
-    print "debug %s" % afile
-    indices[date] = index([x.split("=>", 1)[1] for x in fileinput.input(glob.glob("%s-*.txt" % date))])
+    if not date in indices:
+        indices[date] = index([x.split("=>", 1)[1] for x in fileinput.input(glob.glob("%s-*.txt" % date))])
 
     for (fname,fpattern) in FILTERS:
-        if not fname in counts[date]:
-            counts[date][fname] = 0
+        if fname in counts[date]:
+            continue
+        counts[date][fname] = 0
         for log in fileinput.input(glob.glob("%s-*.txt" % date)):
             if re.search(fpattern,u(log), re.UNICODE):
                 counts[date][fname] += 1
@@ -130,7 +129,7 @@ for i in [1,3,7,14,28,56,112]:
         print "=== Averages for last %s days (min) ==============================" % i
         days = ordered_counts[-i-1:-1]
 
-        indices = aggregate_ls([k[1] for k in ordered_indices][-i:])
+        indices = aggregate_ls([k[1] for k in ordered_indices][-i-1:-1])
         print "\n".join([x + " " + str(len(indices[x])/(60*i)) for x in  sortedByPop(indices)[:15]])
 
         totals = {}

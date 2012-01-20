@@ -96,8 +96,3 @@ focus_factory(app, None)
 
 gtk.main()
 sys.exit()
-    
-
-
-
-

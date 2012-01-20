@@ -21,4 +21,6 @@ FILTERS = [('Computer Usage', ''),
            ('Feedly', 'f \| '),
            ('Anki', 'Anki'),
            ('Stack Overflow', 'Stack Overflow'),
-           ('TED', 'on TED\.com|TED:')]
+           ('TED', 'on TED\.com|TED:'),
+           ('Mundane', 'TODO'),
+           ('Wikipedia', 'Wikipedia, the free encyclopedia')]
