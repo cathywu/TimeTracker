@@ -11,26 +11,36 @@ Computer use time tracker
 @version 2.0
 """
 
+
 def tracker():
+    global buf
     threading.Timer(1.0,tracker).start() # repeat in 1 second
 
     # sketchy utilities to get window title
     inp = os.popen("xdotool getwindowfocus | xargs xprop _NET_WM_NAME -id")
     result = re.match('_NET_WM_NAME\(UTF8_STRING\) = "(?P<window_name>.*)"', inp.readline())
 
+    # record window title in format: time => title
+    if result:
+        nm = result.groupdict()['window_name']
+        tm = time.localtime()
+        tofday = time.strftime("%H:%M:%S", tm)
+        buf.append("%s => %s\n" % (tofday,nm))
     # skip queries that don't match regex
     # FIXME figure out why they don't match
-    nm = result.groupdict()['window_name']
-    if nm:
-        tm = time.localtime()
-        f = open(get_filename(tm), "a")
-        tofday = time.strftime("%H:%M:%S", tm)
-        f.write(tofday + " => " + nm + "\n")
-        f.close()
     # TODO else, log the bad window title
+
+    # clear buffer when it gets too large (30 seconds)
+    if len(buf) > 30:
+        f = open(get_filename(tm), "a")
+        for line in buf:
+            f.write(line)
+        f.close()
+        buf = [] # clear buffer
     
 def get_filename(t):
     return pglobals.data_base % {'date': time.strftime("%Y-%m-%d", t)}
 
 if __name__ == "__main__":
+    buf = [] # buffer to hold window titles and decrease disk access
     tracker()
