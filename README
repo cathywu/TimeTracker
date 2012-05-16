@@ -1,12 +1,13 @@
 === SUPPORTED PLATFORMS ===
 Known to work on:
 Ubuntu 10.04
+Ubuntu 11.04
+Ubuntu 12.04
 
 Know to NOT work on:
-Ubuntu 11.04
+----
 
 === DEPENDENCIES ===
-* python-gnomeapplet
 * xprintidle
 * xdotool
 
