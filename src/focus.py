@@ -11,10 +11,17 @@ Computer use time tracker
 @version 2.0
 """
 
+def get_idle_time_ms():
+    imp = os.popen("xprintidle")
+    return int(imp.readline())
 
 def tracker():
     global buf
     threading.Timer(1.0,tracker).start() # repeat in 1 second
+
+    # don't record when computer is idle
+    if get_idle_time_ms() > 30000:
+        return
 
     # sketchy utilities to get window title
     inp = os.popen("xdotool getwindowfocus | xargs xprop _NET_WM_NAME -id")
