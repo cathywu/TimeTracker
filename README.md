@@ -33,4 +33,4 @@ SETUP
 - In Ubuntu, run gnome-session-properties and add to startup applications:
     `<PATH-TO-TIMETRACKER>/src/focus.py >> /tmp/timetracker.log`
 - Alternatively, just run it manually
-- For simple analytics, run: $ python src/stats.py
+- For simple analytics, run: $ `python src/stats.py`
