@@ -1,3 +1,4 @@
+# Emulates Unix xdotool getwindowfocus | xargs xprop _NEW_WM_NAME -id
 # src: http://stackoverflow.com/questions/5292204/macosx-get-foremost-window-title
 
 global frontApp, frontAppName, windowTitle

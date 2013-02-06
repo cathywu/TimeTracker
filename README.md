@@ -5,7 +5,7 @@ A simple script to keep track of computer usage. It logs locally the active wind
 FEATURES
 ----------------
 - Sleeps when the computer is idle
-- Supports multiple computers (synced via Dropbox)
+- Supports multiple computers (sync-able via Dropbox)
 - Includes basic analytics script
 
 SUPPORTED PLATFORMS
@@ -19,7 +19,7 @@ Known to work on:
 Known to NOT work on:
 - ??
 
-DEPENDENCIES
+DEPENDENCIES (for Ubuntu)
 -----------------
 - xprintidle
 - xdotool
@@ -28,7 +28,7 @@ Install these using: `sudo apt-get install <DEPENDENCY>`
 
 SETUP
 -----------------
-- Set data_dir in src/focus_globals.py. This is where the data is logged.
+- Set data_dir in src/focus_globals.py and any other settings as you see fit. This is where the data is logged.
 - Create data_dir, typically: `mkdir data`
 - On Ubuntu, run gnome-session-properties and add to startup applications:
     `<PATH-TO-TIMETRACKER>/src/focus.py >> /tmp/timetracker.log`
