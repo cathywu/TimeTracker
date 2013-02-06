@@ -1,6 +1,6 @@
 TimeTracker
 =================
-A simple script to keep track of computer usage (for Ubuntu only). It logs locally the active window title for every second of computer use.
+A simple script to keep track of computer usage. It logs locally the active window title for every second of computer use.
 
 SUPPORTED PLATFORMS
 -----------------
