@@ -1,6 +1,13 @@
 TimeTracker
 =================
-A simple script to keep track of computer usage. It logs locally the active window title for every second of computer use. It sleeps when the computer is idle and multiple computers (synced via Dropbox) is supported.
+A simple script to keep track of computer usage. It logs locally the active window title for every second of computer use.
+
+
+FEATURES
+----------------
+- Sleeps when the computer is idle
+- Supports multiple computers (synced via Dropbox)
+- Includes basic analytics script
 
 SUPPORTED PLATFORMS
 -----------------
