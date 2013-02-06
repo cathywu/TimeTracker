@@ -3,6 +3,7 @@ name = "timetracker"
 version = "0.1"
 image_dir = "/usr/share/pixmaps"
 glade_dir = "/usr/share/" + name
+src_dir = "%s/Dropbox/TimeTracker/src" % os.environ['HOME']
 data_dir = "%s/Dropbox/TimeTracker/data" % os.environ['HOME']
 data_base = "%(data_dir)s/%(date)s-%(hostname)s.txt" % {'data_dir':data_dir, 'date':'%(date)s', 'hostname':os.uname()[1]}
 
