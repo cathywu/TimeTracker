@@ -12,10 +12,13 @@ def get_window_title():
     xprop_line = call_process("xdotool getwindowfocus | xargs xprop _NET_WM_NAME -id")
 
     XPROP_PREFIX = "_NET_WM_NAME(UTF8_STRING) = "
+    XPROP_ERROR  = "_NET_WM_NAME:  not found.\n"
     if xprop_line.startswith(XPROP_PREFIX):
         name = xprop_line[len(XPROP_PREFIX):]
         name = name.strip().strip("\"")
         return name
+    elif xprop_line.startswith(XPROP_ERROR):
+        return "<error>window name not found</error>"
     else:
         print("Cannot parse XPROP line: {}".format(repr(xprop_line)), file=sys.stderr)
         return None

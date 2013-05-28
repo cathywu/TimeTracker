@@ -1,6 +1,6 @@
 
-MINTIME = new Date("Sat May 05 2013 00:00:00");
-MAXTIME = new Date("Sat May 05 2013 23:59:59");
+MINTIME = new Date("Sat May 07 2013 00:00:00");
+MAXTIME = new Date("Sat May 07 2013 23:59:59");
 
 RES = []
 
@@ -118,6 +118,7 @@ function click_block() {
                 var p = $("<p></p>").text(last_title + " ");
                 p.append($("<span>(" + last_count + "s)</span>").addClass("counter"));
                 $("#blockinfo").append(p);
+                last_count = 1;
             }
             last_title = title;
         }
