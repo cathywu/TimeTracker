@@ -31,8 +31,8 @@ def tracker():
     if result:
         nm = result.groupdict()['window_name']
         tm = time.localtime()
-        tofday = time.strftime("%H:%M:%S", tm)
-        buf.append("%s => %s\n" % (tofday,nm))
+        tofday = time.strftime("%Y-%m-%d %H:%M:%S", tm)
+        buf.append("%s\t%s\n" % (tofday,nm))
     # skip queries that don't match regex
     # FIXME figure out why they don't match
     # TODO else, log the bad window title
@@ -46,7 +46,7 @@ def tracker():
         buf = [] # clear buffer
     
 def get_filename(t):
-    return pglobals.data_base % {'date': time.strftime("%Y-%m-%d", t)}
+    return pglobals.data_base
 
 if __name__ == "__main__":
     buf = [] # buffer to hold window titles and decrease disk access
