@@ -3,21 +3,10 @@ from flask import Flask
 from flask import render_template, Response
 
 app = Flask(__name__)
-JSON_DATA = './static/timetracker.cathy-wus-MacBook-Pro.local.json'
 DEBUG = True
 
-@app.route('/json/<data_source>')
-def get(data_source):
-    pass
-    # with open(, 'r') as f:
-    #     data = json.load(f)
-    # return data
-
-def json_response(data):
-    return Response(json.dumps(data), mimetype='application/json')
-
 @app.route('/')
-def hello():
+def index():
     return render_template("index.html")
 
 if __name__ == '__main__':
