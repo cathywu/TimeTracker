@@ -135,18 +135,24 @@ function draw_blocks(res) {
 }
 
 $(function() {
-    // $.ajaxSetup( { "async": false } );
     draw_blocks([/.*/]);
     $.getJSON('static/timetracker.cathy-wus-MacBook-Pro.local.json', function(lines) {
         load_data(lines);
         draw_blocks([/.*/]);
     });
 
-    $("#search-button").click(function() {
+    // prevent page re-load on <Enter>
+    $('#search-form').submit(function(e) { 
+        e.preventDefault();
+        $('#search-button').trigger('click');
+    });
+
+    $("#search-button").click(function(e) {
+        e.preventDefault();
         var button = $(this);
         var input = $("#search").val();
 
-        if (!input) {return false;}
+        if (!input) {return true;}
 
         $("#blockinfo").empty();
 
