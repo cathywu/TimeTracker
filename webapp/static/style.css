@@ -26,6 +26,10 @@ body {
     opacity: 1;
 }
 
+#regex-search {
+    width:1000px;
+}
+
 .group-unmatched {background: #888;}
 .group-0 {background: blue;}
 .group-1 {background: green;}
@@ -34,3 +38,9 @@ body {
 .group-4 {background: purple;}
 .group-5 {background: orange;}
 .group-6 {background: cyan;}
+
+#legend {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align:right;
+}

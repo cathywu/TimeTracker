@@ -132,33 +132,38 @@ function click_block() {
 function draw_blocks(res) {
     var ret = select_blocks(res);
     display_blocks(res, ret.blocks, ret.total);
+    // helper text on hover
+    $("#time div").hover(function() { $("#legend").html("<span class='" + $(this).attr('class') + "'>&nbsp;&nbsp;&nbsp;&nbsp;</span><span> " + this.title + "</span>");});
 }
 
 $(function() {
+    // handle regex search
+    $("#regex-search").select2({
+        tags:["Gmail", "Facebook", "Google Calendar", " says…", "iTerm", "StartMATLAB","TeXworks","PowerPoint","Google Chrome"],
+    });
+    $("#regex-search").on("change", function(e) {
+        console.log("change "+JSON.stringify({val:e.val, added:e.added, removed:e.removed})); 
+        if (e.added) {
+            $("#blockinfo").empty();
+            RES.push(new RegExp(e.added.text));
+            draw_blocks(RES);
+        }
+        else if (e.removed) {
+            for(var i=0; i<RES.length; i++) {
+                if (RES[i].toString() == new RegExp(e.removed.text)) {
+                    RES.splice(i,1);
+                    break;
+                }
+            }
+            draw_blocks(RES);
+        }
+    });
+
+    // draw initial blocks
     draw_blocks([/.*/]);
+    // load all the data
     $.getJSON('static/timetracker.cathy-wus-MacBook-Pro.local.json', function(lines) {
         load_data(lines);
         draw_blocks([/.*/]);
-    });
-
-    // prevent page re-load on <Enter>
-    $('#search-form').submit(function(e) { 
-        e.preventDefault();
-        $('#search-button').trigger('click');
-    });
-
-    $("#search-button").click(function(e) {
-        e.preventDefault();
-        var button = $(this);
-        var input = $("#search").val();
-
-        if (!input) {return true;}
-
-        $("#blockinfo").empty();
-
-        $("#search").val("");
-        RES.push(new RegExp(input));
-        $("#searches").append($("<li></li>").text(input));
-        draw_blocks(RES);
     });
 });
