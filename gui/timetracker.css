@@ -10,6 +10,14 @@ body {
     margin: 1em 0;
 }
 
+.empty-timeline {
+    height: 1em;
+    background: #fff;
+    text-align: center;
+    font-size: .5em;
+    margin: 1px 0 0 0;
+}
+
 .timeline {
     height: .5em;
     background: #eee;

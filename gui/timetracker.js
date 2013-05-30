@@ -249,14 +249,26 @@ function draw_timelines(data, res) {
     var end_time = new Date((last_record[0] - 0) + last_record[2]*s);
 
     $("#time").empty();
+    var last_dots = false;
     mapPerDay(start_time, end_time, function(start_day, end_day) {
         var day = slice_data(data, start_day, end_day);
+        console.log(start_day, day.length);
+
         if (day.length) {
             var elt = draw_timeline(day, res);
-        } else {
+            last_dots = false;
+            $("#time").append(elt);
+        } else if (!last_dots) {
             var elt = $("<div></div>").addClass("empty-timeline");
+            elt.text("1 day skipped");
+            elt.data("days-skipped", 1);
+            last_dots = elt;
+            $("#time").append(elt);
+        } else {
+            var skipped = last_dots.data("days-skipped");
+            last_dots.data("days-skipped", ++skipped);
+            last_dots.text(skipped + " days skipped");
         }
-        $("#time").append(elt);
     });
 }
 
