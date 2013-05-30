@@ -107,6 +107,20 @@ function display_blocks(res, blocks, total) {
     }
 }
 
+function seconds_to_human_time(sec) {
+    function round_one_decimal_place(val) {
+        return Math.round(val * 10) / 10;
+    }
+
+    if (sec < 60) {
+        return sec + "s";
+    } else if (sec < 60 * 60) {
+        return round_one_decimal_place(sec / 60) + "min";
+    } else {
+        return round_one_decimal_place(sec / 60) + "hr";
+    }
+}
+
 function click_block() {
     var start = new Date($(this).data("start"));
     var end = new Date($(this).data("end"));
