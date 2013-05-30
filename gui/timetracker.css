@@ -26,6 +26,9 @@ body {
     opacity: 1;
 }
 
+.counter:before {content: "(";}
+.counter:after {content: ")";}
+
 .group-unmatched {background: #888;}
 .group-0 {background: blue;}
 .group-1 {background: green;}

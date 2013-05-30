@@ -137,7 +137,7 @@ function click_block() {
 
         var duration = seconds_to_human_time(number);
         var p = $("<p></p>").text(title + " ");
-        p.append($("<span>(" + duration + ")</span>").addClass("counter"));
+        p.append($("<span></span>").text(duration).addClass("counter"));
         $("#blockinfo").append(p);
     }
 }
