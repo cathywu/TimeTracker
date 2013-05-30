@@ -4,23 +4,24 @@ MAXTIME = new Date("Sat May 07 2013 23:59:59");
 
 RES = []
 
+ALL_DATA = void(0);
+
 function load_data(lines) {
-    window.data = [];
+    window.ALL_DATA = [];
     last_title = void(0);
     for (var i in lines) {
         var parts = lines[i];
         var date = new Date(parts[0]);
         var title = parts[1];
         if (title == last_title) {
-            window.data[window.data.length - 1][2] += 1
+            window.ALL_DATA[window.ALL_DATA.length - 1][2] += 1
         } else {
-            window.data.push([date, title, 1]);
+            window.ALL_DATA.push([date, title, 1]);
             last_title = title;
         }
     }
 }
 
-function select_blocks(res) {
 function binary_search(data, value, keyfn, lean) {
     function searcher(left_idx, right_idx) {
         if (left_idx === right_idx) {
@@ -86,6 +87,8 @@ function slice_data(data, start_time, end_time) {
 
     return output;
 }
+
+function select_blocks(data, res) {
     var blocks = [];
     var total = 0;
     var last_time = 0;
@@ -101,7 +104,7 @@ function slice_data(data, start_time, end_time) {
             blocks.push([number, type, time, void(0)]);
             total += number;
         } else {
-            if (start_time - last_time <= 30*s) {
+            if (start_time - last_time <= 1*s) {
                 var last = blocks[blocks.length - 1];
                 if (last[1] == type) {
                     last[0] += number;
@@ -123,14 +126,10 @@ function slice_data(data, start_time, end_time) {
         }
     }
     
-    for (var i in window.data) {
-        var date = window.data[i][0];
-        var title = window.data[i][1];
-        var number = window.data[i][2];
-
-        if (date < MINTIME || date >= MAXTIME) {
-            continue;
-        }
+    for (var i in data) {
+        var date = data[i][0];
+        var title = data[i][1];
+        var number = data[i][2];
 
         var found = false;
         for (var j in res) {
@@ -149,8 +148,8 @@ function slice_data(data, start_time, end_time) {
     return {blocks: blocks, total: total}
 }
 
-function display_blocks(res, blocks, total) {
-    $("#time").empty();
+function display_blocks(output_elt, data, res, blocks, total) {
+    output_elt.empty();
 
     for (var i in blocks) {
         var block = blocks[i];
@@ -166,7 +165,7 @@ function display_blocks(res, blocks, total) {
         obj.css("width", (block[0] / total * 100) + "%");
         obj.data("start", block[2]);
         obj.data("end", block[3]);
-        obj.on("click", click_block);
+        obj.on("click", { data: data }, click_block);
         obj.addClass("group-" + cssname);
         $("#time").append(obj);
     }
@@ -186,19 +185,16 @@ function seconds_to_human_time(sec) {
     }
 }
 
-function click_block() {
+function click_block(evt) {
     var start = new Date($(this).data("start"));
     var end = new Date($(this).data("end"));
+    var eventlist = slice_data(evt.data.data, start, end);
 
     $("#blockinfo").empty();
-    for (var i in window.data) {
-        var date = window.data[i][0];
-        var title = window.data[i][1];
-        var number = window.data[i][2];
-
-        if (date < start || date >= end) {
-            continue;
-        }
+    for (var i in eventlist) {
+        var date = eventlist[i][0];
+        var title = eventlist[i][1];
+        var number = eventlist[i][2];
 
         var duration = seconds_to_human_time(number);
         var p = $("<p></p>").text(title + " ");
@@ -207,13 +203,16 @@ function click_block() {
     }
 }
 
-function draw_blocks(res) {
-    var ret = select_blocks(res);
-    display_blocks(res, ret.blocks, ret.total);
+function draw_blocks(output_elt, data, res) {
+    var ret = select_blocks(data, res);
+    display_blocks(output_elt, data, res, ret.blocks, ret.total);
 }
 
 $(function() {
-    draw_blocks([/.*/]);
+    var data = slice_data(window.ALL_DATA, MINTIME, MAXTIME);
+    var output_elt = $("#time")
+
+    draw_blocks(output_elt, data, [/.*/]);
 
     $("#search-button").click(function() {
         var button = $(this);
@@ -226,6 +225,6 @@ $(function() {
         $("#search").val("");
         RES.push(new RegExp(input));
         $("#searches").append($("<li></li>").text(input));
-        draw_blocks(RES);
+        draw_blocks(output_elt, data, RES);
     });
 });
