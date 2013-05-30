@@ -167,9 +167,11 @@ function mapPerDay(start_time, end_time, func) {
     var start = (datetime_to_date(start_time) - 0);
     var end = (datetime_to_date(end_time) - 0) + day;
 
+    var out = [];
     for (; start < end - hour; start += day) { // hour is float padding
-        func(new Date(start), new Date(start + day));
+        out.push(func(new Date(start), new Date(start + day)));
     }
+    return out;
 }
 
 function display_blocks(output_elt, data, res, blocks, total) {
