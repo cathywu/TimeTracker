@@ -21,6 +21,71 @@ function load_data(lines) {
 }
 
 function select_blocks(res) {
+function binary_search(data, value, keyfn, lean) {
+    function searcher(left_idx, right_idx) {
+        if (left_idx === right_idx) {
+            return left_idx;
+        } else if (left_idx + 1 === right_idx) {
+            var left_key = keyfn(data[left_idx]);
+            var right_key = keyfn(data[right_idx]);
+
+            if (value === left_key) {
+                return left_idx;
+            } else if (value === right_key) {
+                return right_idx;
+            } else if (lean === "left" || !lean) {
+                return left_idx;
+            } else {
+                return right_idx;
+            }
+        } else {
+            var midpoint = Math.round((right_idx - left_idx) / 2 + left_idx);
+            var midpoint_key = keyfn(data[midpoint]);
+
+            if (value < midpoint_key) {
+                return searcher(left_idx, midpoint);
+            } else if (value > midpoint_key) {
+                return searcher(midpoint, right_idx);
+            } else {
+                return midpoint;
+            }
+        }
+    }
+
+    return searcher(0, data.length-1);
+}
+
+function slice_data(data, start_time, end_time) {
+    var s = 1000; // In milliseconds
+
+    var left_idx = binary_search(data, start_time,
+                                 function(rec){return rec[0];}, "left");
+    var right_idx = binary_search(data, end_time,
+                                  function(rec){return rec[0];}, "left");
+
+    // left_idx <= start_time, right_idx <= end_time
+    if ((data[left_idx][0] - 0) + data[left_idx][2]*s <= start_time) {
+        left_idx += 1;
+    }
+
+
+    var output = data.slice(left_idx, right_idx);
+    var left = output[0];
+    var right = output[output.length - 1];
+
+    if (left[0] < start_time) {
+        var extra = Math.round((left[0] - start_time) / s);
+        var new_left_start = new Date((left[0] - 0) + extra*s);
+        output[0] = [new_left_start, left[1], left[2] - extra];
+    }
+
+    if ((right[0] - 0) + right[2]*s > end_time) {
+        var extra = Math.round(((right[0] - end_time) + right[2]*s) / s)
+        output[output.length - 1] = [right[0], right[1], right[2] - extra];
+    }
+
+    return output;
+}
     var blocks = [];
     var total = 0;
     var last_time = 0;
