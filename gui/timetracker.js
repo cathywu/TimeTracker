@@ -69,8 +69,15 @@ function slice_data(data, start_time, end_time) {
         left_idx += 1;
     }
 
+    if ((data[right_idx][0] - 0) + data[right_idx][2]*s <= start_time) {
+        return [];
+    }
 
-    var output = data.slice(left_idx, right_idx);
+    var output = data.slice(left_idx, right_idx + 1);
+    if (output.length == 0) {
+        return output;
+    }
+
     var left = output[0];
     var right = output[output.length - 1];
 
@@ -148,6 +155,22 @@ function select_blocks(data, res) {
     return {blocks: blocks, total: total}
 }
 
+function datetime_to_date(datetime) {
+    return new Date(datetime.getYear() + 1900, datetime.getMonth(), datetime.getDay());
+}
+
+function mapPerDay(start_time, end_time, func) {
+    var hour = 1000 * 60 * 60;
+    var day = hour * 24;
+
+    var start = (datetime_to_date(start_time) - 0);
+    var end = (datetime_to_date(end_time) - 0) + day;
+
+    for (; start < end - hour; start += day) { // hour is float padding
+        func(new Date(start), new Date(start + day));
+    }
+}
+
 function display_blocks(output_elt, data, res, blocks, total) {
     output_elt.empty();
 
@@ -167,7 +190,7 @@ function display_blocks(output_elt, data, res, blocks, total) {
         obj.data("end", block[3]);
         obj.on("click", { data: data }, click_block);
         obj.addClass("group-" + cssname);
-        $("#time").append(obj);
+        output_elt.append(obj);
     }
 }
 
@@ -203,16 +226,40 @@ function click_block(evt) {
     }
 }
 
-function draw_blocks(output_elt, data, res) {
-    var ret = select_blocks(data, res);
-    display_blocks(output_elt, data, res, ret.blocks, ret.total);
+function draw_timeline(data, res) {
+    function draw_blocks(output_elt, data, res) {
+        var ret = select_blocks(data, res);
+        display_blocks(output_elt, data, res, ret.blocks, ret.total);
+    }
+
+    var output_elt = $("<div></div>").addClass("timeline");
+
+    draw_blocks(output_elt, data, res);
+
+    return output_elt;
 }
 
-$(function() {
-    var data = slice_data(window.ALL_DATA, MINTIME, MAXTIME);
-    var output_elt = $("#time")
+function draw_timelines(data, res) {
+    var s = 1000;
+    var last_record = data[data.length - 1];
+    var start_time = data[0][0];
+    var end_time = new Date((last_record[0] - 0) + last_record[2]*s);
 
-    draw_blocks(output_elt, data, [/.*/]);
+    $("#time").empty();
+    mapPerDay(start_time, end_time, function(start_day, end_day) {
+        var day = slice_data(data, start_day, end_day);
+        if (day.length) {
+            var elt = draw_timeline(day, res);
+        } else {
+            var elt = $("<div></div>").addClass("empty-timeline");
+        }
+        $("#time").append(elt);
+    });
+}
+
+
+$(function() {
+    draw_timelines(window.ALL_DATA, [/.*/]);
 
     $("#search-button").click(function() {
         var button = $(this);
@@ -221,10 +268,11 @@ $(function() {
         if (!input) {return false;}
 
         $("#blockinfo").empty();
-
         $("#search").val("");
-        RES.push(new RegExp(input));
+
         $("#searches").append($("<li></li>").text(input));
-        draw_blocks(output_elt, data, RES);
+        RES.push(new RegExp(input));
+
+        draw_timelines(window.ALL_DATA, RES);
     });
 });
