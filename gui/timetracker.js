@@ -13,6 +13,7 @@ function load_data(lines) {
         var parts = lines[i];
         var date = new Date(parts[0]);
         var title = parts[1];
+
         if (title == last_title) {
             window.ALL_DATA[window.ALL_DATA.length - 1][2] += 1
         } else {
@@ -156,7 +157,7 @@ function select_blocks(data, res) {
 }
 
 function datetime_to_date(datetime) {
-    return new Date(datetime.getYear() + 1900, datetime.getMonth(), datetime.getDay());
+    return new Date(datetime.getYear() + 1900, datetime.getMonth(), datetime.getDate());
 }
 
 function mapPerDay(start_time, end_time, func) {
