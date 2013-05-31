@@ -254,6 +254,9 @@ function click_block(evt) {
     var eventlist = slice_data(evt.data.data, start, end);
 
     $("#blockinfo").empty();
+    var head = $("<h2></h2>").text(start.toTimeString() + " to " + end.toTimeString())
+    $("#blockinfo").append(head);
+
     for (var i in eventlist) {
         var date = eventlist[i][0];
         var title = eventlist[i][1];
