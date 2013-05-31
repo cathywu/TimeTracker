@@ -188,7 +188,7 @@ function display_blocks(output_elt, data, res, blocks, total) {
             default: cssname = block[1], name  = res[block[1]]; break;
         }
         obj.attr("title", name);
-        obj.css("width", (block[0] / total * 100) + "%");
+        obj.css("width", ((block[0] / total) * 96 / 98 * 100) + "%");
         obj.data("start", block[2]);
         obj.data("end", block[3]);
         obj.on("click", { data: data }, click_block);

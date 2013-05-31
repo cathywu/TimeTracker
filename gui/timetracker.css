@@ -21,7 +21,7 @@ body {
 .timeline {
     height: .5em;
     background: #eee;
-    padding: 0;
+    padding: 0 0 0 2%;
     margin: 1px 0 0 0;
 }
 
