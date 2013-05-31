@@ -183,8 +183,12 @@ function mapPerDay(start_time, end_time, func) {
 function display_blocks(output_elt, data, res, blocks, total) {
     output_elt.empty();
 
+    var check_total = 0;
+
     for (var i in blocks) {
         var block = blocks[i];
+
+        check_total += block[0];
 
         var obj = $("<div></div>");
         var name, cssname;
@@ -200,6 +204,11 @@ function display_blocks(output_elt, data, res, blocks, total) {
         obj.on("click", { data: data }, click_block);
         obj.addClass("group-" + cssname);
         output_elt.append(obj);
+    }
+
+    if (total != check_total) {
+        console.log("Error in checking total:", total, check_total);
+        window.ERROR = {data: data, total: total, blocks: blocks, check: total};
     }
 }
 
