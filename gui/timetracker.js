@@ -90,7 +90,11 @@ function slice_data(data, start_time, end_time) {
 
     if ((right[0] - 0) + right[2]*s > end_time) {
         var extra = Math.round(((right[0] - end_time) + right[2]*s) / s)
-        output[output.length - 1] = [right[0], right[1], right[2] - extra];
+        if (right[2] - extra == 0) {
+            output.pop();
+        } else {
+            output[output.length - 1] = [right[0], right[1], right[2] - extra];
+        }
     }
 
     return output;
@@ -125,7 +129,7 @@ function select_blocks(data, res) {
             } else {
                 var skip = Math.round((start_time - last_time) / s);
                 blocks[blocks.length - 1][3] = last_time;
-                blocks.push([skip, "", last_time, time]);
+                blocks.push([skip, "", last_time, start_time]);
                 blocks.push([number, type, start_time, void(0)]);
                 total += skip + number;
             }
@@ -152,6 +156,8 @@ function select_blocks(data, res) {
             push(date, "?", number);
         }
     }
+
+    blocks[blocks.length - 1][3] = last_time;
 
     return {blocks: blocks, total: total}
 }
