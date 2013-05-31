@@ -162,6 +162,28 @@ function select_blocks(data, res) {
     return {blocks: blocks, total: total}
 }
 
+function pad_blocks_day(blocks, start_day, end_day) {
+    var fst_block = blocks[0];
+    var lst_block = blocks[blocks.length - 1];
+    var s = 1000;
+
+    var total_skip = 0;
+
+    if (fst_block[2] != start_day) {
+        var skip = Math.round((fst_block[2] - start_day) / s);
+        blocks.unshift([skip, "", start_day - 0, fst_block[2]]);
+        total_skip += skip;
+    }
+
+    if (lst_block[3] < end_day) {
+        var skip = Math.round((end_day - lst_block[3]) / s);
+        blocks.push([skip, "", lst_block[2], end_day - 0]);
+        total_skip += skip;
+    }
+
+    return total_skip;
+}
+
 function datetime_to_date(datetime) {
     return new Date(datetime.getYear() + 1900, datetime.getMonth(), datetime.getDate());
 }
@@ -244,10 +266,11 @@ function click_block(evt) {
     }
 }
 
-function draw_timeline(data, res) {
+function draw_timeline(data, start_day, end_day, res) {
     function draw_blocks(output_elt, data, res) {
         var ret = select_blocks(data, res);
-        display_blocks(output_elt, data, res, ret.blocks, ret.total);
+        var padding = pad_blocks_day(ret.blocks, start_day, end_day);
+        display_blocks(output_elt, data, res, ret.blocks, ret.total + padding);
     }
 
     var output_elt = $("<div></div>").addClass("timeline");
@@ -267,10 +290,9 @@ function draw_timelines(data, res) {
     var last_dots = false;
     mapPerDay(start_time, end_time, function(start_day, end_day) {
         var day = slice_data(data, start_day, end_day);
-        console.log(start_day, day.length);
 
         if (day.length) {
-            var elt = draw_timeline(day, res);
+            var elt = draw_timeline(day, start_day, end_day, res);
             last_dots = false;
             $("#time").append(elt);
         } else if (!last_dots) {
