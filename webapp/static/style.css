@@ -1,0 +1,46 @@
+
+body {
+    width: 1000px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#time {
+    width: 100%;
+    height: .5em;
+    background: #eee;
+    margin: 1em 0;
+    padding: 0;
+}
+
+#time div {
+    display: block;
+    margin: 0;
+    padding: 0;
+    height: .5em;
+    float: left;
+    opacity: .5;
+}
+
+#time div:hover {
+    opacity: 1;
+}
+
+#regex-search {
+    width:1000px;
+}
+
+.group-unmatched {background: #888;}
+.group-0 {background: blue;}
+.group-1 {background: green;}
+.group-2 {background: red;}
+.group-3 {background: yellow;}
+.group-4 {background: purple;}
+.group-5 {background: orange;}
+.group-6 {background: cyan;}
+
+#legend {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align:right;
+}

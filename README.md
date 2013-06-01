@@ -37,3 +37,9 @@ SETUP
     - Start the LaunchAgent: $ `launchctl start com.timetracker`
 - Alternatively, just run it manually
 - For simple analytics, run: $ `python src/stats.py`
+
+WEBAPP
+-----------------
+- To generate the json file: $ `python src/log_to_json.py data/timetracker.<hostname>.log webapp/static/timetracker.<hostname>.json`
+- To run the web server: $ `python webapp/app.py`
+- Go to http://0.0.0.0:5000/

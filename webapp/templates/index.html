@@ -1,0 +1,19 @@
+<!doctype html>
+
+<html lang="en_US">
+  <head>
+    <meta charset="utf-8" />
+    <title>TimeTracker Explorer</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/timetracker.js')}}"></script>
+    <link href="{{ url_for('static', filename='select2/select2.css') }}" rel="stylesheet"/>
+    <script src="{{ url_for('static', filename='select2/select2.js')}}"></script>
+  </head>
+  <body>
+    <h1>TimeTracker Explorer</h1>
+    <input id="regex-search" value=""/>
+    <div id="legend"></div>
+    <div id="time"></div>
+    <div id="blockinfo"></div>
+</html>

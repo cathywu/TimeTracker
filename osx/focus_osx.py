@@ -30,8 +30,8 @@ def tracker():
     # record window title in format: time => title
     if result:
         tm = time.localtime()
-        tofday = time.strftime("%H:%M:%S", tm)
-        buf.append("%s => %s\n" % (tofday,result))
+        tofday = time.strftime("%Y-%m-%d %H:%M:%S", tm)
+        buf.append("%s\t%s\n" % (tofday,result))
 
     # clear buffer when it gets too large (30 seconds)
     if len(buf) > 30:
@@ -42,7 +42,7 @@ def tracker():
         buf = [] # clear buffer
     
 def get_filename(t):
-    return pglobals.data_base % {'date': time.strftime("%Y-%m-%d", t)}
+    return pglobals.data_base
 
 if __name__ == "__main__":
     buf = [] # buffer to hold window titles and decrease disk access
