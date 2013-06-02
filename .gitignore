@@ -1,3 +1,1 @@
-src/*.pyc
-src/focus_globals.py
-
+gui/data.jsonp

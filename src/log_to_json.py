@@ -3,7 +3,6 @@
 import sys
 import os
 import datetime
-import simplejson as json
 
 INFILE  = open(sys.argv[1]) if len(sys.argv) > 1 else sys.stdin
 OUTFILE = open(sys.argv[2], "w") if len(sys.argv) > 2 else sys.stdout
@@ -17,5 +16,5 @@ with INFILE as f:
         data.append([ts.ctime(), title[:-1]])
 
 with OUTFILE as f:
-    json.dumps
-    json.dump(data, OUTFILE)
+    f.write("load_data({})".format(data))
+    f.flush()
