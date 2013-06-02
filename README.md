@@ -17,8 +17,12 @@ Supported Platforms
 
 Support exists for OS X and X11-based Linux.  For OS X, Snow Leopard and above are known to work.  For X11-based Linux, you'll need `xprintidle` and `xdotool`, which are probably available your distro's package manager in packages of the same name.
 
-Options
--------
+Usage
+-----
+
+The main TimeTracker tool can be started with
+
+    python src/timetracker.py
 
 TimeTracker can be run with no command-line options -- it should print the title of the currently-active window to your terminal, once a second.
 
@@ -26,6 +30,17 @@ TimeTracker can be run with no command-line options -- it should print the title
  + You can pass `-i <sec>` to change how often the title is printed and `-I <sec>` to change how many seconds of idleness will cause the TimeTracker to turn off.
  + You can pass `--buffer <sec>` to buffer output lines for that many seconds.  This is handy if you're synchronizing the output file over Dropbox or are on an SSD.
  + If the OS auto-detection isn't working, you can pass `--os <os>`, where `<os>` is currently one of `x11` or `osx`.
+
+Exploring the Data
+------------------
+
+We've written a simple web application to explore the data you collect.  Run
+
+    make gui
+
+to start it.  It might take a while if you have a lot of data; we plan to fix that.  After that, you can reach it by pointing your web browser to
+
+    http://localhost:8000
 
 Autostart
 ---------
@@ -44,14 +59,3 @@ On OS X, things are more complicated.  First, edit the file `src/com.timetracker
     launchctl start com.timetracker
 
 to add the application to start every time you log in.
-
-Exploring the Data
-------------------
-
-We've written a simple web application to explore the data you collect.  Run
-
-    make gui
-
-to start it.  It might take a while if you have a lot of data; we plan to fix that.  After that, you can reach it by pointing your web browser to
-
-    http://localhost:8000
