@@ -26,7 +26,8 @@ def get_backend(name):
 
     platform = sys.platform
     try:
-        return get_backend({"linux": "x11", "darwin": "osx"}[platform])
+        return get_backend({"linux": "x11", "linux2": "x11",
+                            "darwin": "osx"}[platform])
     except KeyError:
         raise Exception("Can't identify the operating system.  "
                         "Please specify the os on the command line")
@@ -51,7 +52,8 @@ class X11:
         elif xprop_line.startswith(XPROP_ERROR):
             return "<error>window name not found</error>"
         else:
-            print("Cannot parse XPROP line: {}".format(repr(xprop_line)), file=sys.stderr)
+            sys.stderr.write("Cannot parse XPROP line: {}".format(repr(xprop_line)))
+            sys.stderr.flush()
             return None
 
 @backend("osx")
@@ -67,25 +69,27 @@ class OSX:
         return os.popen(["osascript", script]).rstrip("\n")
 
 def printer(buffer=None, file=sys.stdout):
-    start_time = time.time()
+    start_time = [time.time()] # List is a Python 2 hack
     buffered = []
 
-    def print(*args):
-        nonlocal start_time
-
+    def output(*args):
         now = time.time()
-        if buffer is None or now - start_time > float(buffer):
+        if buffer is None or \
+           now - start_time[0] >= float(buffer) - .1: # Float tricks
+
             for old_args in buffered:
                 file.write(*old_args)
                 file.write("\n")
+
             file.write(*args)
             file.write("\n")
             file.flush()
-            start_time = now
+            start_time[0] = now
+            buffered[:] = []
         else:
             buffered.append(args)
 
-    return print
+    return output
 
 def track(opts):
     backend = opts.os
@@ -98,7 +102,7 @@ def track(opts):
     if title:
         now = time.localtime()
         now_iso = time.strftime("%Y-%m-%d %H:%M:%S")
-        opts.print("{}\t{}".format(now_iso, title))
+        opts.output("{}\t{}".format(now_iso, title))
     else:
         pass
 
@@ -134,5 +138,5 @@ def parse_args():
 
 if __name__ == "__main__":
     opts = parse_args()
-    opts.print = printer(opts.buffer, opts.file)
+    opts.output = printer(opts.buffer, opts.file)
     main(opts)
