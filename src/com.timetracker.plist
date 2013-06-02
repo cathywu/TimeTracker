@@ -6,7 +6,13 @@
 	<string>com.timetracker</string>
 	<key>ProgramArguments</key>
 	<array>
-            <string>/Users/cathywu/Dropbox/TimeTracker/src/focus_osx.py</string>
+            <string>/Users/cathywu/Dropbox/TimeTracker/src/timetracker.py</string>
+            <!--
+            Additional arguments would require adding more lines like:
+
+            <string>--file=~/timetracker.log</string>
+
+            -->
 	</array>
 	<key>RunAtLoad</key>
         <true/>
