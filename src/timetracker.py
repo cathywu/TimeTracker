@@ -7,7 +7,7 @@ the currently-active window and write it to a file.
 import time, subprocess, sys
 import os
 
-SRCDIR = os.path.realpath(__file__)
+SRCDIR = os.path.dirname(os.path.realpath(__file__))
 BACKENDS = {"auto": None}
 
 def call_process(shell_cmd):
