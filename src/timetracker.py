@@ -11,7 +11,7 @@ SRCDIR = os.path.dirname(os.path.realpath(__file__))
 BACKENDS = {"auto": None}
 
 def call_process(shell_cmd):
-    p = subprocess.Popen(shell_cmd, shell=True, stdout=subprocess.PIPE)
+    p = subprocess.Popen(shell_cmd, stdout=subprocess.PIPE)
     out, _ = p.communicate()
     return out.decode("utf-8")
 
@@ -30,7 +30,7 @@ def get_backend(name):
                             "darwin": "osx"}[platform])
     except KeyError:
         raise Exception("Can't identify the operating system.  "
-                        "Please specify the os on the command line")
+                        "Please specify the OS on the command line")
 
 @backend("x11")
 class X11:
@@ -40,8 +40,8 @@ class X11:
     
     @staticmethod
     def active_window_title():
-
-        xprop_line = call_process("xprop _NET_WM_NAME -id `xdotool getwindowfocus`")
+        focused_window_id = call_process(["xdotool", "getwindowfocus"]).strip()
+        xprop_line = call_process(["xprop", "_NET_WM_NAME", "-id", focused_window_id])
     
         XPROP_PREFIX = "_NET_WM_NAME(UTF8_STRING) = "
         XPROP_ERROR  = "_NET_WM_NAME:  not found.\n"
