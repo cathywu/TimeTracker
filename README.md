@@ -36,7 +36,7 @@ Exploring the Data
 
 We've written a simple web application to explore the data you collect.  Run
 
-    make gui
+    make gui FILE=<path-to-log>
 
 to start it.  It might take a while if you have a lot of data; we plan to fix that.  After that, you can reach it by pointing your web browser to
 
