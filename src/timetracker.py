@@ -13,7 +13,10 @@ BACKENDS = {"auto": None}
 def call_process(shell_cmd):
     p = subprocess.Popen(shell_cmd, stdout=subprocess.PIPE)
     out, _ = p.communicate()
-    return out.decode("utf-8")
+    if sys.version_info.major == 2:
+        return out # Icky, icky Python 2
+    else:
+        return out.decode("utf-8")
 
 def backend(name):
     def decorator(cls):
@@ -61,12 +64,12 @@ class OSX:
     @staticmethod
     def idle_time_ms():
         script = os.path.join(SRCDIR, "osx_printidle.scpt")
-        return float(call_process(["osascript", script]).rstrip("\n"))
+        return int(call_process(["osascript", script]).rstrip("\n"))
 
     @staticmethod
     def active_window_title():
         script = os.path.join(SRCDIR, "osx_gettitle.scpt")
-        return os.popen(["osascript", script]).rstrip("\n")
+        return call_process(["osascript", script]).rstrip("\n")
 
 def printer(buffer=None, file=sys.stdout):
     start_time = [time.time()] # List is a Python 2 hack
