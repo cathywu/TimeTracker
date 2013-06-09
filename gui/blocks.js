@@ -9,7 +9,7 @@ function select_blocks(data, res) {
     var s = 1000;
 
     function push(time, type, number) {
-        start_time = time - 0; // Convert Date to *milliseconds* since epoch
+        start_time = time; // Convert Date to *milliseconds* since epoch
         end_time = start_time + number*s
 
         if (!blocks.length) {
@@ -72,13 +72,13 @@ function pad_blocks_day(blocks, start_day, end_day) {
 
     if (fst_block[2] != start_day) {
         var skip = Math.round((fst_block[2] - start_day) / s);
-        blocks.unshift([skip, "", start_day - 0, fst_block[2]]);
+        blocks.unshift([skip, "", start_day, fst_block[2]]);
         total_skip += skip;
     }
 
     if (lst_block[3] < end_day) {
         var skip = Math.round((end_day - lst_block[3]) / s);
-        blocks.push([skip, "", lst_block[2], end_day - 0]);
+        blocks.push([skip, "", lst_block[2], end_day]);
         total_skip += skip;
     }
 
@@ -86,19 +86,20 @@ function pad_blocks_day(blocks, start_day, end_day) {
 }
 
 function datetime_to_date(datetime) {
-    return new Date(datetime.getYear() + 1900, datetime.getMonth(), datetime.getDate());
+    var s_per_day = 60 * 60 * 24
+    return Math.floor(datetime / s_per_day) * s_per_day;
 }
 
 function mapPerDay(start_time, end_time, func) {
     var hour = 1000 * 60 * 60;
     var day = hour * 24;
 
-    var start = (datetime_to_date(start_time) - 0);
-    var end = (datetime_to_date(end_time) - 0) + day;
+    var start = (datetime_to_date(start_time));
+    var end = (datetime_to_date(end_time)) + day;
 
     var out = [];
     for (; start < end - hour; start += day) { // hour is float padding
-        out.push(func(new Date(start), new Date(start + day)));
+        out.push(func(start, start + day));
     }
     return out;
 }

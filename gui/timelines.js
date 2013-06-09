@@ -47,8 +47,8 @@ function seconds_to_human_time(sec) {
 }
 
 function click_block(evt) {
-    var start = new Date($(this).data("start"));
-    var end = new Date($(this).data("end"));
+    var start = $(this).data("start");
+    var end = $(this).data("end");
     var eventlist = slice_data(evt.data.data, start, end);
 
     $("#blockinfo").empty();
@@ -85,7 +85,7 @@ function draw_timelines(data, res) {
     var s = 1000;
     var last_record = data[data.length - 1];
     var start_time = data[0][0];
-    var end_time = new Date((last_record[0] - 0) + last_record[2]*s);
+    var end_time = last_record[0] + last_record[2]*s;
 
     $("#time").empty();
     var last_dots = false;

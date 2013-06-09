@@ -154,7 +154,7 @@ function slice_data(data, start_time, end_time) {
 
     if (left[0] < start_time) {
         var extra = Math.round((left[0] - start_time) / s);
-        var new_left_start = new Date((left[0] - 0) + extra*s);
+        var new_left_start = (left[0] - 0) + extra*s;
         output[0] = [new_left_start, left[1], left[2] - extra];
     }
 
