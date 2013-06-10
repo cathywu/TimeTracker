@@ -1,6 +1,10 @@
 ALL_DATA = void(0);
 
+PERF = { init: new Date(), request: null, parse: null,
+         done: null };
+
 function request_data(url) {
+    window.PERF.request = new Date();
     return $.get(url).done(parse_data);
 }
 
@@ -18,10 +22,11 @@ function parse_date_ymdhms(date_string, date) {
     date.setSeconds(hms_parts[2]);
     date.setMilliseconds(0);
 
-    return date - 0;
+    return date / 1000;
 }
 
 function parse_data(data) {
+    window.PERF.parse = new Date();
     var lines = data.split("\n");
     var tmp_date = new Date();
     
@@ -40,4 +45,6 @@ function parse_data(data) {
             last_title = title;
         }
     }
+
+    window.PERF.done = new Date();
 }

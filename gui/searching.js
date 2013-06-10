@@ -128,19 +128,17 @@ function array_search(data, value, keyfn, lean) {
 }
 
 function slice_data(data, start_time, end_time) {
-    var s = 1000; // In milliseconds
-
     var left_idx  = array_search(data, start_time,
                                  function(rec){return rec[0];}, "left");
     var right_idx = array_search(data, end_time,
                                  function(rec){return rec[0];}, "left");
 
     // left_idx <= start_time, right_idx <= end_time
-    if ((data[left_idx][0] - 0) + data[left_idx][2]*s <= start_time) {
+    if ((data[left_idx][0] - 0) + data[left_idx][2] <= start_time) {
         left_idx += 1;
     }
 
-    if ((data[right_idx][0] - 0) + data[right_idx][2]*s <= start_time) {
+    if ((data[right_idx][0] - 0) + data[right_idx][2] <= start_time) {
         return [];
     }
 
@@ -153,13 +151,13 @@ function slice_data(data, start_time, end_time) {
     var right = output[output.length - 1];
 
     if (left[0] < start_time) {
-        var extra = Math.round((left[0] - start_time) / s);
-        var new_left_start = (left[0] - 0) + extra*s;
+        var extra = Math.round(left[0] - start_time);
+        var new_left_start = (left[0] - 0) + extra;
         output[0] = [new_left_start, left[1], left[2] - extra];
     }
 
-    if ((right[0] - 0) + right[2]*s > end_time) {
-        var extra = Math.round(((right[0] - end_time) + right[2]*s) / s)
+    if ((right[0] - 0) + right[2] > end_time) {
+        var extra = Math.round(right[0] - end_time + right[2])
         if (right[2] - extra == 0) {
             output.pop();
         } else {

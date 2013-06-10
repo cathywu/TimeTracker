@@ -18,7 +18,7 @@ function display_blocks(output_elt, data, res, blocks, total) {
             default: cssname = block[1], name  = res[block[1]]; break;
         }
         obj.attr("title", name);
-        obj.css("width", ((block[0] / total) * 96 / 98 * 100) + "%");
+        obj.css("width", (block[0] / total * 100) + "%");
         obj.data("start", block[2]);
         obj.data("end", block[3]);
         obj.on("click", { data: data }, click_block);
@@ -52,7 +52,7 @@ function click_block(evt) {
     var eventlist = slice_data(evt.data.data, start, end);
 
     $("#blockinfo").empty();
-    var head = $("<h2></h2>").text(start.toTimeString() + " to " + end.toTimeString())
+    var head = $("<h2></h2>").text(new Date(start * 1000).toTimeString() + " to " + new Date(end * 1000).toTimeString())
     $("#blockinfo").append(head);
 
     for (var i in eventlist) {
@@ -82,10 +82,9 @@ function draw_timeline(data, start_day, end_day, res) {
 }
 
 function draw_timelines(data, res) {
-    var s = 1000;
     var last_record = data[data.length - 1];
     var start_time = data[0][0];
-    var end_time = last_record[0] + last_record[2]*s;
+    var end_time = last_record[0] + last_record[2];
 
     $("#time").empty();
     var last_dots = false;
