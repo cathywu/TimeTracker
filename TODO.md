@@ -18,6 +18,8 @@ The user interface for the Explorer is rough-hewn.  A few simple changes would i
 
  + It's basically impossible to tell which searches correspond to which color.  If existing searches were to display their color, and also possibly have widgets for editing or removing them, things would be easier.
  
+ + The initial load and parse should display a loading widget.
+ 
  + It's confusing that the first search grays out some boxes.  Maybe the gray could be darker, and then start off like that?
  
  + Hitting the Enter key in the search box reloads the page instead of searching.
