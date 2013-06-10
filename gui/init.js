@@ -4,7 +4,7 @@ RES = []
 
 $(function() {
     request_data("/data.log").done(function() {
-        draw_timelines(window.ALL_DATA, [/.*/]);
+        draw_timelines(window.ALL, []);
 
         $("#search-button").click(function() {
             var button = $(this);
@@ -18,7 +18,7 @@ $(function() {
             $("#searches").append($("<li></li>").text(input));
             RES.push(new RegExp(input));
 
-            draw_timelines(window.ALL_DATA, RES);
+            draw_timelines(window.ALL, RES);
         });
     });
 });

@@ -7,7 +7,7 @@
 // is usually better.  Interpolation might be better for the inital
 // step where day sequences are split out, though.
 
-function binary_search(data, value, keyfn, lean) {
+function binary_search(data, value, lean) {
     var time = 0;
     
     function searcher(left_idx, right_idx) {
@@ -16,8 +16,8 @@ function binary_search(data, value, keyfn, lean) {
         if (left_idx === right_idx) {
             return left_idx;
         } else if (left_idx + 1 === right_idx) {
-            var left_key = keyfn(data[left_idx]);
-            var right_key = keyfn(data[right_idx]);
+            var left_key = data[left_idx];
+            var right_key = data[right_idx];
 
             if (value === left_key) {
                 return left_idx;
@@ -30,7 +30,7 @@ function binary_search(data, value, keyfn, lean) {
             }
         } else {
             var midpoint = Math.round((right_idx - left_idx) / 2 + left_idx);
-            var midpoint_key = keyfn(data[midpoint]);
+            var midpoint_key = data[midpoint];
 
             if (value < midpoint_key) {
                 return searcher(left_idx, midpoint);
@@ -49,7 +49,7 @@ function binary_search(data, value, keyfn, lean) {
 }
 binary_search.times = {sum: 0, count: 0}
 
-function interpolation_search(data, value, keyfn, lean) {
+function interpolation_search(data, value, lean) {
     var time = 0;
     
     function searcher(left_idx, right_idx) {
@@ -58,8 +58,8 @@ function interpolation_search(data, value, keyfn, lean) {
         if (left_idx === right_idx) {
             return left_idx;
         } else if (left_idx + 1 === right_idx) {
-            var left_key = keyfn(data[left_idx]);
-            var right_key = keyfn(data[right_idx]);
+            var left_key = data[left_idx];
+            var right_key = data[right_idx];
 
             if (value === left_key) {
                 return left_idx;
@@ -71,15 +71,15 @@ function interpolation_search(data, value, keyfn, lean) {
                 return right_idx;
             }
         } else {
-            var left_key = keyfn(data[left_idx]);
-            var right_key = keyfn(data[right_idx]);
+            var left_key = data[left_idx];
+            var right_key = data[right_idx];
 
             var midpoint = Math.round((value - left_key) / (right_key - left_key)
                                       * (right_idx - left_idx) + left_idx);
             if (midpoint <= left_idx) midpoint = left_idx+1;
             if (midpoint >= right_idx) midpoint = right_idx-1;
 
-            var midpoint_key = keyfn(data[midpoint]);
+            var midpoint_key = data[midpoint];
 
             if (value < midpoint_key) {
                 return searcher(left_idx, midpoint);
@@ -98,15 +98,16 @@ function interpolation_search(data, value, keyfn, lean) {
 }
 interpolation_search.times = {sum: 0, count: 0}
 
-function array_search(data, value, keyfn, lean) {
+function array_search(data, value, lean) {
     if (Math.random() < .1) {
-        var ans1 = binary_search(data, value, keyfn, lean);
-        var ans2 = interpolation_search(data, value, keyfn, lean);
+        var ans1 = binary_search(data, value, lean);
+        var ans2 = interpolation_search(data, value, lean);
         if (ans1 != ans2) {
             if (window.console && console.log) {
                 console.log("Interpolation and Binary Search disagree");
                 window.ERROR = {ans1: ans1, ans2: ans2,
-                                value: value, keyfn: keyfn, lean: lean, data: data};
+                                value: value, lean: lean,
+                                data: data};
             }
             interpolation_search.panic = true;
         }
@@ -123,45 +124,46 @@ function array_search(data, value, keyfn, lean) {
             fn = binary_search;
         }
 
-        return fn(data, value, keyfn, lean);
+        return fn(data, value, lean);
     }
 }
 
-function slice_data(data, start_time, end_time) {
-    var left_idx  = array_search(data, start_time,
-                                 function(rec){return rec[0];}, "left");
-    var right_idx = array_search(data, end_time,
-                                 function(rec){return rec[0];}, "left");
+function slice_data(data, start_t, end_t) {
+    var left_idx  = array_search(data.times, start_t, "left");
+    var right_idx = array_search(data.times, end_t, "left");
 
     // left_idx <= start_time, right_idx <= end_time
-    if ((data[left_idx][0] - 0) + data[left_idx][2] <= start_time) {
+    if (data.times[left_idx] + data.lengths[left_idx] <= start_t) {
         left_idx += 1;
     }
 
-    if ((data[right_idx][0] - 0) + data[right_idx][2] <= start_time) {
+    if (data.times[right_idx] + data.lengths[right_idx] <= start_t) {
         return [];
     }
 
-    var output = data.slice(left_idx, right_idx + 1);
-    if (output.length == 0) {
-        return output;
+    var output = { times: null, titles: null, lengths: null };
+    output.times = data.times.slice(left_idx, right_idx + 1);
+    output.titles = data.titles.slice(left_idx, right_idx + 1);
+    output.lengths = data.lengths.slice(left_idx, right_idx + 1);
+    if (output.times.length == 0) {return output;}
+
+    var last = output.times.length - 1;
+
+    if (output.times[0] < start_t) {
+        var extra = Math.round(output.times[0] - start_t);
+        output.times[0]   += extra;
+        output.lengths[0] -= extra;
     }
 
-    var left = output[0];
-    var right = output[output.length - 1];
+    var output_end = output.times[last] + output.lengths[last];
+    if (output_end > end_t) {
+        var extra = Math.round(output_end - end_t)
+        output.lengths[last] -= extra
 
-    if (left[0] < start_time) {
-        var extra = Math.round(left[0] - start_time);
-        var new_left_start = (left[0] - 0) + extra;
-        output[0] = [new_left_start, left[1], left[2] - extra];
-    }
-
-    if ((right[0] - 0) + right[2] > end_time) {
-        var extra = Math.round(right[0] - end_time + right[2])
-        if (right[2] - extra == 0) {
-            output.pop();
-        } else {
-            output[output.length - 1] = [right[0], right[1], right[2] - extra];
+        if (output.lengths[last] == 0) {
+            output.times.pop();
+            output.titles.pop();
+            output.lengths.pop();
         }
     }
 

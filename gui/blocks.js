@@ -37,10 +37,10 @@ function select_blocks(data, res) {
         }
     }
     
-    for (var i in data) {
-        var date = data[i][0];
-        var title = data[i][1];
-        var number = data[i][2];
+    for (var i in data.times) {
+        var date = data.times[i];
+        var title = data.titles[i];
+        var number = data.lengths[i];
 
         var found = false;
         for (var j in res) {

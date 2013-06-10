@@ -52,13 +52,15 @@ function click_block(evt) {
     var eventlist = slice_data(evt.data.data, start, end);
 
     $("#blockinfo").empty();
-    var head = $("<h2></h2>").text(new Date(start * 1000).toTimeString() + " to " + new Date(end * 1000).toTimeString())
+    var head = $("<h2></h2>").text(
+        new Date(start * 1000).toTimeString() + " to "
+            + new Date(end * 1000).toTimeString());
     $("#blockinfo").append(head);
 
-    for (var i in eventlist) {
-        var date = eventlist[i][0];
-        var title = eventlist[i][1];
-        var number = eventlist[i][2];
+    for (var i in eventlist.times) {
+        var date = eventlist.times[i];
+        var title = eventlist.titles[i];
+        var number = eventlist.lengths[i];
 
         var duration = seconds_to_human_time(number);
         var p = $("<p></p>").text(title + " ");
@@ -82,16 +84,16 @@ function draw_timeline(data, start_day, end_day, res) {
 }
 
 function draw_timelines(data, res) {
-    var last_record = data[data.length - 1];
-    var start_time = data[0][0];
-    var end_time = last_record[0] + last_record[2];
+    var start_time = data.times[0];
+    var last = data.times.length - 1;
+    var end_time = data.times[last] + data.lengths[last];
 
     $("#time").empty();
     var last_dots = false;
     mapPerDay(start_time, end_time, function(start_day, end_day) {
         var day = slice_data(data, start_day, end_day);
 
-        if (day.length) {
+        if (day.times.length) {
             var elt = draw_timeline(day, start_day, end_day, res);
             last_dots = false;
             $("#time").append(elt);
