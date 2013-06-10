@@ -15,7 +15,7 @@ function select_blocks(data, res) {
             blocks.push([number, type, time, void(0)]);
             total += number;
         } else {
-            if (start_time - last_time <= 1) {
+            if (start_time - last_time <= 5) {
                 var last = blocks[blocks.length - 1];
                 if (last[1] == type) {
                     last[0] += number;
