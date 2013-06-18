@@ -1,4 +1,4 @@
-<!-- type: markdown -->
+<!-- -*- type: markdown -*- -->
 
 TimeTracker
 ===========
@@ -59,3 +59,8 @@ On OS X, things are more complicated.  First, edit the file `src/com.timetracker
     launchctl start com.timetracker
 
 to add the application to start every time you log in.
+
+For Developers
+--------------
+
+Bugs and TODOs is are tracked on a [Trello board](https://trello.com/board/timetracker/51bfd90728cdf3b260002195).
