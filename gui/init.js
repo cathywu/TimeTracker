@@ -1,24 +1,34 @@
 // Initialization code; global variables and startup code.
 
 RES = []
+DATA = null;
 
 $(function() {
-    request_data("/data.log").done(function() {
-        draw_timelines(window.ALL, []);
+    $("#file").on("change", function() {
+        var file = this.files[0];
+        if (!file) return;
 
-        $("#search-button").click(function() {
-            var button = $(this);
-            var input = $("#search").val();
+        DATA = new TimeLog(file);
 
-            if (!input) {return false;}
+        // The past one week of data
+        var start = datetime_next_day(new Date() / 1000 - 60 * 60 * 24 * 7);
+        DATA.read_before(start).then(function() {
+            draw_timelines(DATA, []);
 
-            $("#blockinfo").empty();
-            $("#search").val("");
+            $("#search-button").click(function() {
+                var button = $(this);
+                var input = $("#search").val();
 
-            $("#searches").append($("<li></li>").text(input));
-            RES.push(new RegExp(input));
+                if (!input) {return false;}
 
-            draw_timelines(window.ALL, RES);
+                $("#blockinfo").empty();
+                $("#search").val("");
+
+                $("#searches").append($("<li></li>").text(input));
+                RES.push(new RegExp(input));
+
+                draw_timelines(DATA, RES);
+            });
         });
     });
 });

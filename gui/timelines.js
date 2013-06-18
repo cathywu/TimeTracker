@@ -87,6 +87,7 @@ function draw_timelines(data, res) {
     var start_time = data.times[0];
     var last = data.times.length - 1;
     var end_time = data.times[last] + data.lengths[last];
+    console.log(start_time, end_time);
 
     $("#time").empty();
     var last_dots = false;

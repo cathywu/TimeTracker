@@ -1,17 +1,7 @@
-TIMES   = void(0);
-TITLES  = void(0);
-LENGTHS = void(0);
-ALL = void(0);
-
-PERF = { init: new Date(), request: null, parse: null,
-         done: null };
-
-function request_data(url) {
-    window.PERF.request = new Date();
-    return $.get(url).done(parse_data);
-}
 
 function parse_date_ymdhms(date_string, date) {
+    if (!date) date = new Date();
+
     var halves = date_string.split(" ");
     var ymd_parts = halves[0].split("-");
     var hms_parts = halves[1].split(":");
@@ -28,17 +18,73 @@ function parse_date_ymdhms(date_string, date) {
     return date / 1000;
 }
 
-function parse_data(data) {
-    window.PERF.parse = new Date();
+function TimeLog(file_store) {
+    this.store = file_store;
+
+    this.times = [];
+    this.titles = [];
+    this.lengths = [];
+
+    this.start = file_store.size;
+
+    return this;
+}
+
+TimeLog.prototype.read_file = function(start_byte, end_byte) {
+    var reader = new FileReader();
+    var promise = new jQuery.Deferred();
+    var t = this;
+    reader.onload = function(evt) {
+        if (evt.target.readyState == FileReader.DONE) {
+            promise.resolveWith(t, [evt.target.result]);
+        } else {
+            console.log("Ready state is", evt.target.readyState);
+        }
+    }
+    reader.readAsBinaryString(this.store.slice(start_byte, end_byte))
+    return promise;
+}
+
+TimeLog.prototype.find_line = function(start_byte) {
+    var promise = new jQuery.Deferred();
+
+    this.read_file(start_byte, start_byte + 128) .then(function(buf) {
+        var idx = buf.indexOf("\n");
+
+        if (idx >= 0) {
+            var ret = start_byte + idx + 1;
+            promise.resolveWith(this, [ret]);
+        } else {
+            this.find_line(start_byte + 128).then(function(ret) {
+                promise.resolveWith(this, [ret]);
+            });
+        }
+    });
+
+    return promise;
+}
+
+TimeLog.prototype.read_from = function(start_byte) {
+    var promise = new jQuery.Deferred();
+    this.find_line(start_byte).then(function(start) {
+        this.read_file(start, this.start).then(function (data) {
+            this.parse_data(data);
+            this.start = start;
+            console.log("Read from", this.start, "of", this.store.size,
+                        (this.store.size - this.start) / this.store.size)
+            promise.resolveWith(this);
+        });
+    });
+    return promise;
+}
+
+TimeLog.prototype.parse_data = function(data) {
     var lines = data.split("\n");
     var tmp_date = new Date();
-    
-    window.TIMES = new Array(lines.length);
-    window.TITLES = new Array(lines.length);
-    window.LENGTHS = new Array(lines.length);
 
-    window.ALL = {times: window.TIMES, titles: window.TITLES,
-                  lengths: window.LENGTHS};
+    var times = new Array();
+    var titles = new Array();
+    var lengths = new Array();
 
     last_title = void(0);
     last_date = void(0);
@@ -50,20 +96,42 @@ function parse_data(data) {
         var title = parts.join("\t");
 
         if (title == last_title && date - last_date <= 10) {
-            window.LENGTHS[j - 1] += 1;
+            lengths[j - 1] += 1;
         } else {
-            window.TIMES[j] = date;
-            window.TITLES[j] = title;
-            window.LENGTHS[j] = 1;
+            times[j] = date;
+            titles[j] = title;
+            lengths[j] = 1;
             j++;
         }
 
         last_title = title;
         last_date = date;
     }
-    window.TIMES.length = j;
-    window.TITLES.length = j;
-    window.LENGTHS.length = j;
 
-    window.PERF.done = new Date();
+    if (this.titles.length && this.titles[0] == titles[j-1]) {
+        this.times[0] = times[j-1];
+        this.lengths[0] += lengths[j-1];
+        times.pop(); titles.pop(); lengths.pop();
+    }
+
+    this.times = times.concat(this.times);
+    this.titles = titles.concat(this.titles);
+    this.lengths = lengths.concat(this.lengths);
+}
+
+TimeLog.prototype.read_before = function(time) {
+    var promise = new jQuery.Deferred();
+    this.read_from(this.start - 1024*1024).then(function() {
+        console.log("At (" + (new Date(this.times[0]*1000)) +
+                    "), looking for before (" + (new Date(time*1000)) +
+                    ")");
+        if (this.times[0] <= time) {
+            promise.resolveWith(this);
+        } else {
+            this.read_before(time).then(function() {
+                promise.resolveWith(this);
+            });
+        }
+    });
+    return promise;
 }

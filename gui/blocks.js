@@ -100,3 +100,7 @@ function mapPerDay(start_time, end_time, func) {
     }
     return out;
 }
+
+function datetime_next_day(start_time) {
+    return datetime_to_date(start_time) + 60 * 60 * 24;
+}

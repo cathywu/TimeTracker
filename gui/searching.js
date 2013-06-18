@@ -138,7 +138,7 @@ function slice_data(data, start_t, end_t) {
     }
 
     if (data.times[right_idx] + data.lengths[right_idx] <= start_t) {
-        return [];
+        return {times: [], titles: [], lengths: []};
     }
 
     var output = { times: null, titles: null, lengths: null };
