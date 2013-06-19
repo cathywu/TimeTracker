@@ -15,5 +15,5 @@ gui/data.jsonp: $(FILE)
 gui/data.log: $(FILE)
 	cp $+ $@
 
-gui/timetracker.js: gui/searching.js gui/blocks.js gui/load.js gui/timelines.js gui/init.js
+gui/timetracker.js: gui/datetime.js gui/searching.js gui/blocks.js gui/load.js gui/timelines.js gui/init.js
 	cat $+ > $@

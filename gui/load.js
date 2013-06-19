@@ -1,23 +1,4 @@
 
-function parse_date_ymdhms(date_string, date) {
-    if (!date) date = new Date();
-
-    var halves = date_string.split(" ");
-    var ymd_parts = halves[0].split("-");
-    var hms_parts = halves[1].split(":");
-
-    date.setYear(ymd_parts[0]);
-    date.setMonth(ymd_parts[1] - 1);
-    date.setDate(ymd_parts[2]);
-
-    date.setHours(hms_parts[0]);
-    date.setMinutes(hms_parts[1]);
-    date.setSeconds(hms_parts[2]);
-    date.setMilliseconds(0);
-
-    return date / 1000;
-}
-
 function TimeLog(file_store) {
     this.store = file_store;
 

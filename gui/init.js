@@ -11,7 +11,7 @@ $(function() {
         DATA = new TimeLog(file);
 
         // The past one week of data
-        var start = datetime_next_day(new Date() / 1000 - 60 * 60 * 24 * 7);
+        var start = datetime_next_day(Date.now() / 1000 - 60 * 60 * 24 * 7);
         DATA.read_before(start).then(function() {
             draw_timelines(DATA, []);
 

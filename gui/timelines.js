@@ -53,8 +53,8 @@ function click_block(evt) {
 
     $("#blockinfo").empty();
     var head = $("<h2></h2>").text(
-        new Date(start * 1000).toTimeString() + " to "
-            + new Date(end * 1000).toTimeString());
+        flt_to_date(start).toTimeString() + " to "
+            + flt_to_date(end).toTimeString());
     $("#blockinfo").append(head);
 
     for (var i in eventlist.times) {
