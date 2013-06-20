@@ -64,7 +64,7 @@ class OSX:
     @staticmethod
     def idle_time_ms():
         script = os.path.join(SRCDIR, "osx_printidle.scpt")
-        return int(call_process(["osascript", script]).rstrip("\n"))
+        return float(call_process(["osascript", script]).rstrip("\n"))
 
     @staticmethod
     def active_window_title():
