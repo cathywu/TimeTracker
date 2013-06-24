@@ -1,0 +1,115 @@
+* { margin: 0 ; padding: 0 }
+
+body {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 2em;
+    position: relative;
+}
+
+h1 {
+    line-height: 1.5em;
+    margin-top: .5em;
+    margin-bottom: 1em;
+}
+
+#getting-started {
+    padding: 3em 10%;
+}
+
+#getting-started > form {
+    vertical-align: middle;
+    padding-right: 3%;
+    display: inline-block;
+}
+
+#getting-started > form > button {
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+
+#getting-started > form > button > img {
+    width: 92%;
+    margin: 4%;
+}
+
+#getting-started > form > button:hover > img {
+    width: 100%;
+    margin: 0;
+}
+
+#getting-started > form > input[type=file] {
+    display: none;
+}
+
+#loading {
+    padding: 3em 10%;
+    display: none;
+}
+
+#loading > div {
+    height: 1em;
+    width: 100%;
+    background: #eee;
+}
+
+#loading > div > div {
+    height: 1em;
+    width: 0%;
+    background: #888;
+}
+
+#getting-started > p {
+    vertical-align: middle;
+    width: 80%;
+    padding-left: 3%;
+    display: inline-block;
+    border-left: 1px solid gray;
+}
+
+#ui {display: none;}
+
+#time {
+    width: 100%;
+    margin: 1em 0;
+}
+
+.empty-timeline {
+    height: 1em;
+    background: #fff;
+    text-align: center;
+    font-size: .5em;
+    margin: 1px 0 0 0;
+}
+
+.timeline {
+    height: .5em;
+    background: #eee;
+    margin: 1px 0 0 0;
+}
+
+.timeline div {
+    display: block;
+    margin: 0;
+    padding: 0;
+    height: .5em;
+    float: left;
+    opacity: .5;
+}
+
+.timeline div:hover {
+    opacity: 1;
+}
+
+.counter:before {content: "(";}
+.counter:after {content: ")";}
+
+.group-unmatched {background: #888;}
+.group-0 {background: blue;}
+.group-1 {background: green;}
+.group-2 {background: red;}
+.group-3 {background: yellow;}
+.group-4 {background: purple;}
+.group-5 {background: orange;}
+.group-6 {background: cyan;}

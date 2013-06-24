@@ -4,21 +4,36 @@
   <head>
     <meta charset="utf-8" />
     <title>TimeTracker Explorer</title>
-    <link rel="stylesheet" href="timetracker.css" />
+    <link rel="stylesheet" href="style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     <script src="timetracker.js"></script>
   </head>
   <body>
     <h1>TimeTracker Explorer</h1>
-    <form id="file_form">
-      <input type="file" id="file" />
-    </form>
-    <form>
-      <input id="search" type="search" default="Regex Search" />
-      <button id="search-button" type="button">Search</button>
-      <ul id="searches"> </ul>
-    </form>
-    <div id="time">
+    <div id="getting-started">
+      <form id="file_form">
+        <input type="file" id="file" />
+        <button id="file-button" type="button">
+          <img src="im/document-open.png" alt="Open Log..." />
+        </button>
+      </form>
+
+      <p>To get started, click the button to the left and select your
+      TimeTracker log file.</p>
     </div>
-    <div id="blockinfo"></div>
+
+    <div id="loading">
+      <div><div></div></div>
+    </div>
+
+    <div id="ui">
+      <form>
+        <input id="search" type="search" default="Regex Search" />
+        <button id="search-button" type="button">Search</button>
+        <ul id="searches"> </ul>
+      </form>
+      <div id="time">
+      </div>
+      <div id="blockinfo"></div>
+    </div>
 </html>

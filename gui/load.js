@@ -51,8 +51,7 @@ TimeLog.prototype.read_from = function(start_byte) {
         this.read_file(start, this.start).then(function (data) {
             this.parse_data(data);
             this.start = start;
-            console.log("Read from", this.start, "of", this.store.size,
-                        (this.store.size - this.start) / this.store.size)
+
             promise.resolveWith(this);
         });
     });
@@ -103,9 +102,15 @@ TimeLog.prototype.parse_data = function(data) {
 TimeLog.prototype.read_before = function(time) {
     var promise = new jQuery.Deferred();
     this.read_from(this.start - 1024*1024).then(function() {
-        console.log("At (" + (new Date(this.times[0]*1000)) +
-                    "), looking for before (" + (new Date(time*1000)) +
-                    ")");
+
+        {
+            var end = this.times[this.times.length-1];
+            var cur = this.times[0];
+            var start = time;
+
+            progress((end - cur) / (end - start));
+        }
+
         if (this.times[0] <= time) {
             promise.resolveWith(this);
         } else {
