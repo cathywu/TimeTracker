@@ -3,9 +3,29 @@
 RES = []
 DATA = null;
 
+function on_new_search() {
+    var button = $(this);
+    var input = $("#search").val();
+
+    if (!input) {return false;}
+
+    $("#blockinfo").empty();
+    $("#search").val("");
+
+    $("#searches").append($("<li></li>").text(input));
+    RES.push(new RegExp(input));
+
+    draw_timelines(DATA, RES);
+}
+
 $(function() {
     $("#file-button").on("click", function() {
         $("#file")[0].click();
+    });
+
+    $("#search_form").on("submit", function(evt) {
+        evt.preventDefault();
+        on_new_search();
     });
 
     $("#file").on("change", function() {
@@ -30,20 +50,7 @@ $(function() {
 
             draw_timelines(DATA, []);
 
-            $("#search-button").click(function() {
-                var button = $(this);
-                var input = $("#search").val();
-
-                if (!input) {return false;}
-
-                $("#blockinfo").empty();
-                $("#search").val("");
-
-                $("#searches").append($("<li></li>").text(input));
-                RES.push(new RegExp(input));
-
-                draw_timelines(DATA, RES);
-            });
+            $("#search-button").click(on_new_search);
         });
     });
 });
