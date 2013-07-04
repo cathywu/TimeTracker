@@ -62,9 +62,16 @@ function print_date(start) {
 
 function print_time(start) {
     var sdate = flt_to_date(start);
+
+    // Minutes are always padded to two digits
     var padded_minutes = "0" + sdate.getMinutes();
     var minutes = padded_minutes.substr(padded_minutes.length - 2);
-    return sdate.getHours()+":"+minutes;
+
+    // Hours are not padded (2:12 is a fine date), but times just past
+    // midnight are formatted as "00:12" instead of as "0:12".
+    var hours = sdate.getHours() ? sdate.getHours() : "00";
+
+    return hours + ":" + minutes;
 }
 
 function print_timerange(start, end) {
