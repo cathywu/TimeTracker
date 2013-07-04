@@ -107,13 +107,15 @@ h1 {
     height: .5em;
     background: #eee;
     margin: 1px 0 0 0;
+    overflow: none;
+    clear: both;
 }
 
 .timeline div {
     display: block;
-    margin: 0;
+    margin: .1em 0;
     padding: 0;
-    height: .5em;
+    height: .3em;
     float: left;
     opacity: .5;
 }
