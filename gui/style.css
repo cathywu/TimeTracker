@@ -122,8 +122,35 @@ h1 {
     opacity: 1;
 }
 
-.counter:before {content: "(";}
-.counter:after {content: ")";}
+#blockinfo {
+    clear: both;
+    margin-top: 2em;
+}
+
+#blockevents {
+    list-style-type: none;
+    width: 100%;
+    font-size: 80%;
+    margin-top: 1em;
+}
+
+#blockevents tr {
+    overflow: hidden;
+    width: 100%;
+}
+
+#blockevents .title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#blockevents .counter {
+    color: #444;
+    min-width: 5ex;
+    display: inline-block;
+    text-align: right;
+    padding-right: .4em;
+}
 
 .group-unmatched {background: #888;}
 .group-0 {background: darkblue;}

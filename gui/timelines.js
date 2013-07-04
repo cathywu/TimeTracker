@@ -32,41 +32,12 @@ function display_blocks(output_elt, data, res, blocks, total) {
     }
 }
 
-function seconds_to_human_time(sec) {
-    function round_one_decimal_place(val) {
-        return Math.round(val * 10) / 10;
-    }
-
-    if (sec < 60) {
-        return sec + "s";
-    } else if (sec < 60 * 60) {
-        return round_one_decimal_place(sec / 60) + "min";
-    } else {
-        return round_one_decimal_place(sec / 60) + "hr";
-    }
-}
-
 function click_block(evt) {
     var start = $(this).data("start");
     var end = $(this).data("end");
     var eventlist = slice_data(evt.data.data, start, end);
 
-    $("#blockinfo").empty();
-    var head = $("<h2></h2>").text(
-        flt_to_date(start).toTimeString() + " to "
-            + flt_to_date(end).toTimeString());
-    $("#blockinfo").append(head);
-
-    for (var i in eventlist.times) {
-        var date = eventlist.times[i];
-        var title = eventlist.titles[i];
-        var number = eventlist.lengths[i];
-
-        var duration = seconds_to_human_time(number);
-        var p = $("<p></p>").text(title + " ");
-        p.append($("<span></span>").text(duration).addClass("counter"));
-        $("#blockinfo").append(p);
-    }
+    on_click_block(start, end, eventlist);
 }
 
 function draw_timeline(data, start_day, end_day, res) {
@@ -87,7 +58,6 @@ function draw_timelines(data, res) {
     var start_time = data.times[0];
     var last = data.times.length - 1;
     var end_time = data.times[last] + data.lengths[last];
-    console.log(start_time, end_time);
 
     $("#time").empty();
     var last_dots = false;
