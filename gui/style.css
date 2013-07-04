@@ -72,7 +72,6 @@ h1 {
 
 #time {
     width: 100%;
-    margin: 1em 0;
 }
 
 .empty-timeline {
@@ -81,6 +80,27 @@ h1 {
     text-align: center;
     font-size: .5em;
     margin: 1px 0 0 0;
+}
+
+#searches {
+    margin: 1em 0;
+    font-size: 80%;
+    font-family: monospace;
+}
+
+#searches > li {
+    list-style-type: none;
+    display: inline-block;
+    padding: .25em .5em;
+    border-radius: .5em;
+    background: #eee;
+    margin: 0 .25em;
+}
+
+#searches > li > img {
+    width: 1em;
+    height: 1em;
+    margin: .1em 0 0 .5em;
 }
 
 .timeline {
@@ -106,10 +126,13 @@ h1 {
 .counter:after {content: ")";}
 
 .group-unmatched {background: #888;}
-.group-0 {background: blue;}
-.group-1 {background: green;}
-.group-2 {background: red;}
-.group-3 {background: yellow;}
-.group-4 {background: purple;}
-.group-5 {background: orange;}
-.group-6 {background: cyan;}
+.group-0 {background: darkblue;}
+.group-1 {background: darkgreen;}
+.group-2 {background: darkred;}
+.group-3 {background: darkgoldenrod;}
+.group-4 {background: darkmagenta;}
+.group-5 {background: darkorange;}
+.group-6 {background: darkslategray;}
+.group-7 {background: darkviolet;}
+.group-8 {background: forestgreen;}
+.group-9 {background: indigo;}

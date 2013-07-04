@@ -12,7 +12,11 @@ function on_new_search() {
     $("#blockinfo").empty();
     $("#search").val("");
 
-    $("#searches").append($("<li></li>").text(input));
+    var cls = "group-" + RES.length;
+    var tile = $("<img/>").addClass(cls);
+    var badge = $("<li></li>").text(input).append(tile);
+
+    $("#searches").append(badge);
     RES.push(new RegExp(input));
 
     draw_timelines(DATA, RES);
