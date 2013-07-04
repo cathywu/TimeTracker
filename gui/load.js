@@ -22,7 +22,7 @@ TimeLog.prototype.read_file = function(start_byte, end_byte) {
             console.log("Ready state is", evt.target.readyState);
         }
     }
-    reader.readAsBinaryString(this.store.slice(start_byte, end_byte))
+    reader.readAsText(this.store.slice(start_byte, end_byte), "UTF-8");
     return promise;
 }
 
