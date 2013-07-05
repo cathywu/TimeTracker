@@ -5,6 +5,7 @@ body {
     margin: 0 auto;
     padding: 0 2em;
     position: relative;
+    font-size: 110%;
 }
 
 h1 {
@@ -30,12 +31,12 @@ h1 {
 }
 
 #getting-started > form > button > img {
-    width: 92%;
-    margin: 4%;
+    width: 44px;
+    margin: 2px;
 }
 
 #getting-started > form > button:hover > img {
-    width: 100%;
+    width: 48px;
     margin: 0;
 }
 
@@ -104,7 +105,7 @@ h1 {
 }
 
 .timeline {
-    height: .5em;
+    height: 10px;
     background: #eee;
     margin: 1px 0 0 0;
     overflow: none;
@@ -115,9 +116,18 @@ h1 {
     display: block;
     margin: .1em 0;
     padding: 0;
-    height: .3em;
+    height: 8px;
     float: left;
     opacity: .5;
+}
+
+.timeline div.round-right {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.timeline div.round-left {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
 }
 
 .timeline div:hover {
@@ -144,11 +154,12 @@ h1 {
 #blockevents .title {
     text-overflow: ellipsis;
     overflow: hidden;
+    width: 100%;
 }
 
 #blockevents .counter {
     color: #444;
-    min-width: 5ex;
+    width: 5ex;
     display: inline-block;
     text-align: right;
     padding-right: .4em;

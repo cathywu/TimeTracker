@@ -15,7 +15,7 @@ function select_blocks(data, res) {
             blocks.push([number, type, time, void(0)]);
             total += number;
         } else {
-            if (start_time - last_time <= 5) {
+            if (start_time - last_time <= MIN_GAP) {
                 var last = blocks[blocks.length - 1];
                 if (last[1] == type) {
                     last[0] += number;
@@ -67,13 +67,13 @@ function pad_blocks_day(blocks, start_day, end_day) {
 
     var total_skip = 0;
 
-    if (fst_block[2] != start_day) {
+    if (fst_block[2] - start_day > MIN_GAP) {
         var skip = Math.round(fst_block[2] - start_day);
         blocks.unshift([skip, "", start_day, fst_block[2]]);
         total_skip += skip;
     }
 
-    if (lst_block[3] < end_day) {
+    if (end_day - lst_block[3] > MIN_GAP) {
         var skip = Math.round(end_day - lst_block[3]);
         blocks.push([skip, "", lst_block[2], end_day]);
         total_skip += skip;

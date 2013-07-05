@@ -99,7 +99,7 @@ $(function() {
         DATA = new TimeLog(file);
 
         // The past one week of data
-        var start = (moment().subtract('week', 1).startOf('day'))/1000;
+        var start = (moment().subtract('week', 1).startOf('day').add('day', 1))/1000;
         DATA.read_before(start).then(function() {
             $("#loading").css("display", "none");
             $("#ui").css("display", "block");

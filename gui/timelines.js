@@ -23,6 +23,17 @@ function display_blocks(output_elt, data, res, blocks, total) {
         obj.data("end", block[3]);
         obj.on("click", { data: data }, click_block);
         obj.addClass("group-" + cssname);
+
+        if (cssname == "none" && block[0] / total > .01) {
+            output_elt.find("div").last().addClass("round-right");
+        } else if (cssname != "none") {
+            var last = output_elt.find("div").last();
+            if (last.hasClass("group-none") &&
+                +last.css("width").split("%")[0] > 1) { // strip("%")
+                obj.addClass("round-left");
+            }
+        }
+        
         output_elt.append(obj);
     }
 
