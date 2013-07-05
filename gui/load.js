@@ -59,6 +59,24 @@ TimeLog.prototype.read_from = function(start_byte) {
 }
 
 TimeLog.prototype.parse_data = function(data) {
+    var tmp_date = new Date();
+    function parse_date(date_string) {
+        var halves = date_string.split(" ");
+        var ymd_parts = halves[0].split("-");
+        var hms_parts = halves[1].split(":");
+        
+        tmp_date.setFullYear(ymd_parts[0]);
+        tmp_date.setMonth(ymd_parts[1] - 1);
+        tmp_date.setDate(ymd_parts[2]);
+
+        tmp_date.setHours(hms_parts[0]);
+        tmp_date.setMinutes(hms_parts[1]);
+        tmp_date.setSeconds(hms_parts[2]);
+        tmp_date.setMilliseconds(0);
+
+        return tmp_date / 1000;
+    }
+    
     var lines = data.split("\n");
 
     var times = new Array();
@@ -71,8 +89,8 @@ TimeLog.prototype.parse_data = function(data) {
     for (var i in lines) {
         var parts = lines[i].split("\t");
         if (parts.length < 2) continue;
-        var date = moment(parts.shift(), "YYYY-MM-DD HH:mm:ss") / 1000;
-        var title = parts.join("\t");
+        var date = parse_date(parts[0]);
+        var title = parts[1];
 
         if (title == last_title && date - last_date <= 10) {
             lengths[j - 1] += 1;
@@ -100,7 +118,7 @@ TimeLog.prototype.parse_data = function(data) {
 
 TimeLog.prototype.read_before = function(time) {
     var promise = new jQuery.Deferred();
-    this.read_from(this.start - 1024*1024).then(function() {
+    this.read_from(this.start - 64*1024).then(function() {
 
         {
             var end = this.times[this.times.length-1];
