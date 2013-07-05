@@ -4,7 +4,7 @@ RES = []
 DATA = null;
 
 function timerange_to_string(start, end) {
-    var title = start.format("[On] lll");
+    var title = start.format("[On] ll");
     if (end.diff(start) < 2*60*1000) {
         title += start.format(", [at] HH:mm [for] ") + end.from(start, true);
     } else {
@@ -99,13 +99,13 @@ $(function() {
         DATA = new TimeLog(file);
 
         // The past one week of data
-        var start = datetime_next_day(Date.now() / 1000 - 60 * 60 * 24 * 7);
+        var start = (moment().subtract('week', 1).startOf('day'))/1000;
         DATA.read_before(start).then(function() {
             $("#loading").css("display", "none");
             $("#ui").css("display", "block");
             clearInterval(load_updater);
 
-            draw_timelines(DATA, []);
+            draw_timelines(slice_data(DATA, start, moment()/1000), []);
 
             $("#search-button").click(on_new_search);
         });

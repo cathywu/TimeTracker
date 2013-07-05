@@ -81,26 +81,3 @@ function pad_blocks_day(blocks, start_day, end_day) {
 
     return total_skip;
 }
-
-function datetime_to_date(datetime) {
-    var s_per_day = 60 * 60 * 24
-    return Math.floor(datetime / s_per_day) * s_per_day;
-}
-
-function mapPerDay(start_time, end_time, func) {
-    var hour = 60 * 60;
-    var day = hour * 24;
-
-    var start = (datetime_to_date(start_time));
-    var end = (datetime_to_date(end_time)) + day;
-
-    var out = [];
-    for (; start < end - hour; start += day) { // hour is float padding
-        out.push(func(start, start + day));
-    }
-    return out;
-}
-
-function datetime_next_day(start_time) {
-    return datetime_to_date(start_time) + 60 * 60 * 24;
-}

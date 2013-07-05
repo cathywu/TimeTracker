@@ -81,3 +81,16 @@ function draw_timelines(data, res) {
         }
     });
 }
+
+function mapPerDay(start_time, end_time, func) {
+    var start = moment.unix(start_time).startOf("day");
+    var end = moment.unix(end_time).startOf("day").add("day", 1);
+    var days = end.diff(start, "days");
+    end = start.clone().add("day", 1);
+
+    var out = [];
+    for (var i = 0; i < days; i++, start.add("d", 1), end.add('d', 1)) {
+        out.push(func(start/1000, end/1000));
+    }
+    return out;
+}

@@ -1,5 +1,4 @@
 document.write("<script src='common.js'></script>")
-document.write("<script src='datetime.js'></script>")
 document.write("<script src='searching.js'></script>")
 document.write("<script src='blocks.js'></script>")
 document.write("<script src='load.js'></script>")
