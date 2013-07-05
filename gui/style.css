@@ -114,7 +114,7 @@ h1 {
 
 .timeline div {
     display: block;
-    margin: .1em 0;
+    margin: 1px 0;
     padding: 0;
     height: 8px;
     float: left;
