@@ -60,7 +60,6 @@ TimeLog.prototype.read_from = function(start_byte) {
 
 TimeLog.prototype.parse_data = function(data) {
     var lines = data.split("\n");
-    var tmp_date = new Date();
 
     var times = new Array();
     var titles = new Array();
@@ -72,7 +71,7 @@ TimeLog.prototype.parse_data = function(data) {
     for (var i in lines) {
         var parts = lines[i].split("\t");
         if (parts.length < 2) continue;
-        var date = parse_date_ymdhms(parts.shift(), tmp_date);
+        var date = moment(parts.shift(), "YYYY-MM-DD HH:mm:ss") / 1000;
         var title = parts.join("\t");
 
         if (title == last_title && date - last_date <= 10) {

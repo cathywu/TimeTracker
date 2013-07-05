@@ -37,7 +37,7 @@ function click_block(evt) {
     var end = $(this).data("end");
     var eventlist = slice_data(evt.data.data, start, end);
 
-    on_click_block(start, end, eventlist);
+    on_click_block(moment.unix(start), moment.unix(end), eventlist);
 }
 
 function draw_timeline(data, start_day, end_day, res) {
