@@ -7,8 +7,8 @@ function select_blocks(data, res) {
     var last_time = 0;
 
     function push(time, type, number) {
-        start_time = time; // Convert Date to *milliseconds* since epoch
-        end_time = start_time + number
+        start_time = time;
+        end_time = start_time + number;
 
         if (!blocks.length) {
             last_time = end_time;
@@ -37,10 +37,11 @@ function select_blocks(data, res) {
         }
     }
     
-    for (var i in data.times) {
+    for (var i = 0; i < data.times.length; i++) {
         var date = data.times[i];
         var title = data.titles[i];
         var number = data.lengths[i];
+        if (typeof date !== "number") console.log(i, date, title, number)
 
         var found = false;
         for (var j in res) {

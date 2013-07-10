@@ -142,7 +142,7 @@ function slice_data(data, start_t, end_t) {
     }
 
     var output = { times: null, titles: null, lengths: null };
-    output.times = data.times.slice(left_idx, right_idx + 1);
+    output.times = data.times.subarray(left_idx, right_idx + 1);
     output.titles = data.titles.slice(left_idx, right_idx + 1);
     output.lengths = data.lengths.slice(left_idx, right_idx + 1);
     if (output.times.length == 0) {return output;}
@@ -161,7 +161,7 @@ function slice_data(data, start_t, end_t) {
         output.lengths[last] -= extra
 
         if (output.lengths[last] == 0) {
-            output.times.pop();
+            output.times = output.times.subarray(0, output.times.length - 1);
             output.titles.pop();
             output.lengths.pop();
         }

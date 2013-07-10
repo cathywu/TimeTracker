@@ -29,7 +29,7 @@ TimeLog.prototype.read_file = function(start_byte, end_byte) {
 TimeLog.prototype.find_line = function(start_byte) {
     var promise = new jQuery.Deferred();
 
-    this.read_file(start_byte, start_byte + 128) .then(function(buf) {
+    this.read_file(start_byte, start_byte + 128).then(function(buf) {
         var idx = buf.indexOf("\n");
 
         if (idx >= 0) {
@@ -86,8 +86,9 @@ TimeLog.prototype.parse_data = function(data) {
     }
     
     var lines = data.split("\n");
+    var n = lines.length;
 
-    var times = new Array();
+    var times = new Float64Array(n + this.times.length);
     var titles = new Array();
     var lengths = new Array();
 
@@ -112,14 +113,24 @@ TimeLog.prototype.parse_data = function(data) {
         last_title = title;
         last_date = date;
     }
+    n = j;
 
     if (this.titles.length && this.titles[0] == titles[j-1]) {
         this.times[0] = times[j-1];
         this.lengths[0] += lengths[j-1];
-        times.pop(); titles.pop(); lengths.pop();
+        titles.pop(); lengths.pop();
+
+        // Chop off last time.  The extra wasted byte costs nothing
+        // since the entire array will be garbage collected if we ever
+        // load more data.
+        times.set(this.times, n-1);
+        this.times = times.subarray(0, n + this.times.length -1);
+    } else {
+        times.set(this.times, n);
+        this.times = times.subarray(0, n + this.times.length);
     }
 
-    this.times = times.concat(this.times);
+
     this.titles = titles.concat(this.titles);
     this.lengths = lengths.concat(this.lengths);
 }

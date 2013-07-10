@@ -56,7 +56,7 @@ function on_click_block(start, end, eventlist) {
     var head = $block.find("h2").text(timerange_to_string(start, end));
 
     $evts.empty();
-    for (var i in eventlist.times) {
+    for (var i = 0; i < eventlist.times.length; i++) {
         var date = eventlist.times[i];
         var title = eventlist.titles[i];
         var number = eventlist.lengths[i];
