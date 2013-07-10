@@ -60,21 +60,29 @@ TimeLog.prototype.read_from = function(start_byte) {
 
 TimeLog.prototype.parse_data = function(data) {
     var tmp_date = new Date();
-    function parse_date(date_string) {
-        var halves = date_string.split(" ");
-        var ymd_parts = halves[0].split("-");
-        var hms_parts = halves[1].split(":");
-        
-        tmp_date.setFullYear(ymd_parts[0]);
-        tmp_date.setMonth(ymd_parts[1] - 1);
-        tmp_date.setDate(ymd_parts[2]);
+    // Fewer Date manipulations
+    tmp_date.setDate(1);
+    tmp_date.setHours(0);
+    tmp_date.setMinutes(0);
+    tmp_date.setSeconds(0);
+    tmp_date.setMilliseconds(0);
 
-        tmp_date.setHours(hms_parts[0]);
-        tmp_date.setMinutes(hms_parts[1]);
-        tmp_date.setSeconds(hms_parts[2]);
-        tmp_date.setMilliseconds(0);
+    function parse_date(s) {
+        var year = s.substr(0, 4);
+        var month = Number(s.substr(5, 2));
+        var day = Number(s.substr(8, 2));
 
-        return tmp_date / 1000;
+        var hour = Number(s.substr(11, 2));
+        var minute = Number(s.substr(14, 2));
+        var second = Number(s.substr(17, 2));
+
+        // Hand-coding these is a pain because of leap years and month
+        // lengths, so we use Date to handle the hard parts
+        tmp_date.setFullYear(year);
+        tmp_date.setMonth(month-1);
+
+        var offset = 86400*(day-1) + 3600*hour + 60*minute + second;
+        return tmp_date / 1000 + offset;
     }
     
     var lines = data.split("\n");
