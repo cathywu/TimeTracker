@@ -40,7 +40,7 @@ function on_new_search() {
     $("#search").val("");
 
     var cls = "group-" + RES.length;
-    var tile = $("<img/>").addClass(cls);
+    var tile = $("<div/>").addClass(cls);
     var badge = $("<li></li>").text(input).append(tile);
 
     $("#searches").append(badge);
