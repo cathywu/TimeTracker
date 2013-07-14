@@ -57,3 +57,5 @@ For Developers
 --------------
 
 Bugs and TODOs is are tracked on a [Trello board](https://trello.com/board/timetracker/51bfd90728cdf3b260002195).
+
+TimeTracker is published under the GNU GPL, version 3 or greater (at your option).  See the file `COPYING` for the text of the GPLv3.  TimeTracker currently distributes the minified source of the Moment.js library, which is distributed according to the terms of an MIT license.
