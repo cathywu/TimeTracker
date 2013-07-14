@@ -105,29 +105,38 @@ h1 {
 }
 
 .timeline {
-    height: 10px;
+    height: .75em;
     background: #eee;
-    margin: 1px 0 0 0;
+    margin: 2px 0 0 0;
     overflow: none;
     clear: both;
 }
 
+.timeline:before {
+    content: attr(title);
+    font-size: .75em;
+    position: absolute;
+    font-family: sans;
+    min-width: 3em;
+    left: -2em;
+}
+
 .timeline div {
     display: block;
-    margin: 1px 0;
+    margin: .075em 0;
     padding: 0;
-    height: 8px;
+    height: .6em;
     float: left;
     opacity: .5;
 }
 
 .timeline div.round-right {
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+    border-top-right-radius: .2em;
+    border-bottom-right-radius: .2em;
 }
 .timeline div.round-left {
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
+    border-top-left-radius: .2em;
+    border-bottom-left-radius: .2em;
 }
 
 .timeline div:hover {

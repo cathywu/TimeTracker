@@ -59,6 +59,7 @@ function draw_timeline(data, start_day, end_day, res) {
     }
 
     var output_elt = $("<div></div>").addClass("timeline");
+    output_elt.attr("title", moment.unix(start_day).format("MMM Do"));
 
     draw_blocks(output_elt, data, res);
 
