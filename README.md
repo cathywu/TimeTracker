@@ -34,13 +34,7 @@ TimeTracker can be run with no command-line options -- it should print the title
 Exploring the Data
 ------------------
 
-We've written a simple web application to explore the data you collect.  Run
-
-    make gui FILE=<path-to-log>
-
-to start it.  It might take a while if you have a lot of data; we plan to fix that.  After that, you can reach it by pointing your web browser to
-
-    http://localhost:8000
+We've written a simple web application to explore the data you collect.  To start it, just open `gui/index.html` in a browser.  The TimeTracker Explorer lets you execute regular expression queries on your time logs and browse the results.
 
 Autostart
 ---------
@@ -53,12 +47,11 @@ On a Linux that starts to pure X, you'll want to add a similar line to `.xinitrc
 
     <path-to-source>/src/timetracker.py <args> &
 
-On OS X, things are more complicated.  First, edit the file `src/com.timetracker.plist` to add any command-line arguments that you want added.  For example, you'll probably want to specify the output file.  Then, run
+On OS X, things are more complicated.  Run
 
     make plist
-    launchctl start com.timetracker
 
-to add the application to start every time you log in.
+This will open up an editor on the file `src/com.timetracker.plist` to add any command-line arguments that you want added.  For example, you'll probably want to specify the output file. The logger will start every time you log in.
 
 For Developers
 --------------

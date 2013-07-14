@@ -5,6 +5,7 @@ plist:
 	$EDITOR ~/Library/LaunchAgents/com.timetracker.plist
 	launchctl unload ~/Library/LaunchAgents/com.timetracker.plist
 	launchctl load ~/Library/LaunchAgents/com.timetracker.plist
+	launchctl start com.timetracker
 
 .PHONY: compile
 compile: gui/index.js
