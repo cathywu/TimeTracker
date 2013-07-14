@@ -71,7 +71,7 @@ function draw_timelines(data, res) {
     var last = data.times.length - 1;
     var end_time = data.times[last] + data.lengths[last];
 
-    $("#time").empty();
+    $("#time .timeline").remove();
     var last_dots = false;
     mapPerDay(start_time, end_time, function(start_day, end_day) {
         var day = slice_data(data, start_day, end_day);

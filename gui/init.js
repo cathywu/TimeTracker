@@ -2,6 +2,7 @@
 
 RES = []
 DATA = null;
+START = null;
 
 function timerange_to_string(start, end) {
     var title = start.format("[On] ll");
@@ -31,8 +32,8 @@ function seconds_to_human_time(sec) {
     }
 }
 
-function on_new_search() {
-    var button = $(this);
+function on_new_search(evt) {
+    evt.preventDefault();
     var input = $("#search").val();
 
     if (!input) {return false;}
@@ -72,6 +73,19 @@ function on_click_block(start, end, eventlist) {
     $("#blockinfo").css("display", "block");
 }
 
+function load_before(date) {
+    START = date;
+    return DATA.read_before(date).then(function() {
+        $("#loading").css("display", "none");
+        $("#ui").css("display", "block");
+
+        draw_timelines(slice_data(DATA, date, moment()/1000), RES);
+        if (! DATA.start) {
+            $("#load-more").hide();
+        }
+    });
+}
+
 $(function() {
     $("#file-button").on("click", function() {
         $("#file")[0].click();
@@ -79,10 +93,8 @@ $(function() {
 
     $("#blockinfo").css("display", "none");
 
-    $("#search_form").on("submit", function(evt) {
-        evt.preventDefault();
-        on_new_search();
-    });
+    $("#search-form").on("submit", on_new_search);
+    $("#search-button").click(on_new_search);
 
     $("#file").on("change", function() {
         $("#getting-started").css("display", "none");
@@ -97,17 +109,19 @@ $(function() {
         if (!file) return;
 
         DATA = new TimeLog(file);
-
+        
         // The past one week of data
-        var start = (moment().subtract('week', 1).startOf('day').add('day', 1))/1000;
-        DATA.read_before(start).then(function() {
-            $("#loading").css("display", "none");
-            $("#ui").css("display", "block");
+        var start = (moment().subtract('week', 1).endOf('day') + 1)/1000;
+        load_before(start).then(function() {
             clearInterval(load_updater);
-
-            draw_timelines(slice_data(DATA, start, moment()/1000), []);
-
-            $("#search-button").click(on_new_search);
+        });
+    });
+    
+    $("#load-more").on("click", function(evt) {
+        $("#load-more").addClass("loading").attr("disabled", "disabled");
+        var start = moment.unix(START).subtract('week', 1) / 1000;
+        load_before(start).then(function() {
+            $("#load-more").removeClass("loading").removeAttr("disabled");
         });
     });
 });

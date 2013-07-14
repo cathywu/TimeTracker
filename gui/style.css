@@ -87,6 +87,7 @@ h1 {
     margin: 1em 0;
     font-size: 80%;
     font-family: monospace;
+    min-height: 1.5em;
 }
 
 #searches > li {
@@ -103,6 +104,11 @@ h1 {
     height: 1em;
     margin: .15em 0 0 .5em;
     display: inline-block;
+}
+
+#load-more {
+    text-align: center;
+    float: right;
 }
 
 .timeline {
