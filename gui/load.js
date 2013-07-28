@@ -19,7 +19,7 @@ TimeLog.prototype.read_file = function(start_byte, end_byte) {
         if (evt.target.readyState == FileReader.DONE) {
             promise.resolveWith(t, [evt.target.result]);
         } else {
-            console.log("Ready state is", evt.target.readyState);
+            // pass
         }
     }
     reader.readAsText(this.store.slice(start_byte, end_byte), "UTF-8");
@@ -137,17 +137,19 @@ TimeLog.prototype.parse_data = function(data) {
 
 TimeLog.prototype.read_before = function(time) {
     var promise = new jQuery.Deferred();
-    this.read_from(this.start - 64*1024).then(function() {
 
+    var start = this.start - 64*1024;
+    if (start <= 0) start = 0;
+
+    this.read_from(start).then(function() {
         {
             var end = this.times[this.times.length-1];
             var cur = this.times[0];
-            var start = time;
 
-            progress((end - cur) / (end - start));
+            progress((end - cur) / (end - time));
         }
 
-        if (this.times[0] <= time) {
+        if (this.times[0] <= time || start <= 0) {
             promise.resolveWith(this);
         } else {
             this.read_before(time).then(function() {
