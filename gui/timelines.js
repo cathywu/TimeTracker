@@ -13,8 +13,8 @@ function display_blocks(output_elt, data, res, blocks, total) {
         var obj = $("<div></div>");
         var name, cssname;
         switch (block[1]) {
-            case "":  cssname = "none", name  = ""; break;
-            case "?": cssname = name = "unmatched"; break;
+            case "":  cssname = "group-none", name  = ""; break;
+            case "?": cssname = "group-unmatched", name = "unmatched"; break;
             default: cssname = block[1], name  = res[block[1]]; break;
         }
         obj.attr("title", name);
@@ -22,9 +22,9 @@ function display_blocks(output_elt, data, res, blocks, total) {
         obj.data("start", block[2]);
         obj.data("end", block[3]);
         obj.on("click", { data: data }, click_block);
-        obj.addClass("group-" + cssname);
+        obj.addClass(cssname);
 
-        if (cssname == "none" && block[0] / total > .01) {
+        if (cssname == "group-none" && block[0] / total > .01) {
             output_elt.find("div").last().addClass("round-right");
         } else if (cssname != "none") {
             var last = output_elt.find("div").last();

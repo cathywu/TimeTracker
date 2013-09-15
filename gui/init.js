@@ -1,6 +1,6 @@
 // Initialization code; global variables and startup code.
 
-RES = []
+SELECTORS = []
 DATA = null;
 START = null;
 
@@ -40,14 +40,14 @@ function on_new_search(evt) {
 
     $("#search").val("");
 
-    var cls = "group-" + RES.length;
+    var cls = "group-" + SELECTORS.length;
     var tile = $("<div/>").addClass(cls);
     var badge = $("<li></li>").text(input).append(tile);
 
     $("#searches").append(badge);
-    RES.push(new RegExp(input));
+    SELECTORS.push(new Selectors.RE(input, cls));
 
-    draw_timelines(DATA, RES);
+    draw_timelines(DATA, SELECTORS);
 }
 
 function on_click_block(start, end, eventlist) {
@@ -79,7 +79,7 @@ function load_before(date) {
         $("#loading").css("display", "none");
         $("#ui").css("display", "block");
 
-        draw_timelines(slice_data(DATA, date, moment()/1000), RES);
+        draw_timelines(slice_data(DATA, date, moment()/1000), SELECTORS);
         if (! DATA.start) {
             $("#load-more").hide();
         }

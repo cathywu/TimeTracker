@@ -1,7 +1,7 @@
 // Some utility functions on blocks; in particular, block selection
 // and padding is implemented here.
 
-function select_blocks(data, res) {
+function select_blocks(data, selectors) {
     var blocks = [];
     var total = 0;
     var last_time = 0;
@@ -37,22 +37,30 @@ function select_blocks(data, res) {
         }
     }
     
+    var last = -1;
     for (var i = 0; i < data.times.length; i++) {
         var date = data.times[i];
         var title = data.titles[i];
         var number = data.lengths[i];
-        if (typeof date !== "number") console.log(i, date, title, number)
 
-        var found = false;
-        for (var j in res) {
-            if (title.search(res[j]) > -1) {
-                push(date, j, number);
-                found = true;
+        if (last >= 0) {
+            if (selectors[last].cont(date, title, number)) {
+                push(date, selectors[j].group, number);
+                continue;
+            } else {
+                last = -1;
+            }
+        }
+
+        for (var j in selectors) {
+            if (selectors[j].start(date, title, number)) {
+                last = j;
+                push(date, selectors[j].group, number);
                 break;
             }
         }
 
-        if (!found) {
+        if (last < 0) {
             push(date, "?", number);
         }
     }
