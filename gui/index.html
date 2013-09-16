@@ -10,7 +10,6 @@
     <script src="index.js"></script>
   </head>
   <body>
-    <h1>TimeTracker Explorer</h1>
     <div id="getting-started">
       <form id="file_form">
         <input type="file" id="file" />
@@ -25,18 +24,19 @@
 
     <div id="loading">
       <div><div></div></div>
+      <p>Plotting your data…</p>
     </div>
 
     <div id="ui">
+      <div id="time">
+          <button id="load-more" type="button">Load More</button>
+      </div>
       <form id="search-form">
         <input id="search" type="search" default="Regex Search" />
         <button id="search-button" type="button">Search</button>
         <ul id="searches">
-          <button id="load-more" type="button">Load More</button>
         </ul>
       </form>
-      <div id="time">
-      </div>
       <div id="blockinfo">
         <h2></h2>
         <table id="blockevents"></table>

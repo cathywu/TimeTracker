@@ -2,17 +2,12 @@
 
 body {
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 1em auto;
     padding: 0 2em;
     position: relative;
     font-size: 110%;
 }
 
-h1 {
-    line-height: 1.5em;
-    margin-top: .5em;
-    margin-bottom: 1em;
-}
 
 #getting-started {
     padding: 3em 10%;
@@ -73,6 +68,7 @@ h1 {
 
 #time {
     width: 100%;
+    margin-bottom: 1em;
 }
 
 .empty-timeline {
@@ -81,6 +77,14 @@ h1 {
     text-align: center;
     font-size: .5em;
     margin: 1px 0 0 0;
+}
+
+#search {
+    width: calc(100% - 6em);
+}
+
+#search-button {
+    width: 5em;
 }
 
 #searches {
