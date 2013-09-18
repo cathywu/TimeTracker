@@ -31,15 +31,32 @@
       <div id="time">
           <button id="load-more" type="button">Load More</button>
       </div>
+
       <form id="search-form">
         <input id="search" type="search" default="Regex Search" />
         <button id="search-button" type="button">Search</button>
         <ul id="searches">
         </ul>
       </form>
+
       <div id="blockinfo">
-        <h2></h2>
-        <table id="blockevents"></table>
+        <h2>On Sep 14 2013, at 14:54–15:30</h2>
+        <table id="blockevents" class="events">
+          <tr><td class="counter">1m</td><td class="title">title</td></tr>
+        </table>
+      </div>
+
+      <div id="searchinfo">
+        <header>
+          <button type="button" id="delete-search">Delete</button>
+          <h2 contenteditable>Search</h2>
+        </header>
+        <section id="searchdetails">
+          <p>Total time: <span class="total_time">?s</span>
+            in <span class="total_blocks">?</span> uninterrupted blocks.</p>
+        </section>
+        <table id="searchevents" class="events">
+        </table>
       </div>
     </div>
 </html>

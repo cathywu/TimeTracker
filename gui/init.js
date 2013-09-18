@@ -26,9 +26,9 @@ function seconds_to_human_time(sec) {
     } else if (sec < 60 * 60) {
         return Math.round(sec / 60) + "m";
     } else if (sec < 60 * 60 * 10) {
-        return round_one_decimal_place(sec / 60) + "hr";
+        return round_one_decimal_place(sec / (60 * 60)) + "hr";
     } else {
-        return Math.round(sec / 60) + "hr";
+        return Math.round(sec / (60 * 60)) + "hr";
     }
 }
 
@@ -44,6 +44,9 @@ function on_new_search(evt) {
     var selector = parse_query(input, cls);
     var tile = $("<div/>").addClass(cls);
     var badge = $("<li></li>").text(input).append(tile);
+    badge.on("click", { data: DATA }, function(evt) {
+        on_click_search(selector, evt);
+    });
 
     $("#searches").append(badge);
     SELECTORS.splice(0, 0, selector);
@@ -51,6 +54,8 @@ function on_new_search(evt) {
     selector.group = cls;
     selector.badge = badge;
 
+    $("#blockinfo").css("display", "none");
+    $("#searchinfo").css("display", "none");
     draw_timelines(DATA, SELECTORS);
 }
 
@@ -61,20 +66,68 @@ function on_click_block(start, end, eventlist) {
     var head = $block.find("h2").text(timerange_to_string(start, end));
 
     $evts.empty();
-    for (var i = 0; i < eventlist.times.length; i++) {
-        var date = eventlist.times[i];
-        var title = eventlist.titles[i];
-        var number = eventlist.lengths[i];
+    add_events(eventlist, $evts);
 
-        var length = seconds_to_human_time(number);
-        
-        var $evt = $("<tr></tr>");
-        $evt.append($("<td></td>").text(length).addClass("counter"));
-        $evt.append($("<td></td>").text(title).addClass("title"));
-        $evts.append($evt);
-    }
-
+    $("#searchinfo").css("display", "none");
     $("#blockinfo").css("display", "block");
+}
+
+function on_click_search(selector, evt) {
+    var $block = $("#searchinfo");
+    $block.data("selector", selector);
+
+    $block.find("h2").text(selector.text);
+    var $evts = $block.find("#searchevents");
+    $evts.empty();
+
+    // TODO : Dumb
+    var total_secs = 0;
+    var total_blocks = 0;
+    $(".timeline > ." + selector.group).each(function(block) {
+        var start = $(this).data("start");
+        var end = $(this).data("end");
+        var eventlist = slice_data(evt.data.data, start, end);
+
+        var block_secs = 0;
+        for (var seg_secs of eventlist.lengths) block_secs += seg_secs;
+
+        var $counter = $("<td/>").addClass("counter");
+        $counter.text(seconds_to_human_time(block_secs));
+        var $text = $("<td/>").addClass("title");
+        $text.text("Looking at " + selector.text);
+        var $expand = $("<td/>").addClass("action");
+        var $row = $("<tr/>").append($counter).append($text).append($expand);
+        $evts.append($row);
+
+        var $link = $("<a/>").attr("href", "#").text("details");
+        $expand.append($link);
+
+        var ctr = true;
+        $link.click(function(evt) {
+            if (ctr) {
+                var $table = $("<table/>");
+                var $cell = $("<td/>").append($table).attr("colspan", 3);
+                $row.after($("<tr/>").append($cell));
+                add_events(eventlist, $table);
+                $link.text("close");
+            } else {
+                $row.next("tr").remove();
+                $link.text("details");
+            }
+
+            ctr = !ctr;
+            evt.preventDefault();
+        });
+
+        total_secs += block_secs;
+        total_blocks += 1;
+    });
+
+    $block.find("#searchdetails .total_time").text(seconds_to_human_time(total_secs));
+    $block.find("#searchdetails .total_blocks").text(total_blocks);
+
+    $("#blockinfo").css("display", "none");
+    $("#searchinfo").css("display", "block");
 }
 
 function load_before(date) {
@@ -96,6 +149,7 @@ $(function() {
     });
 
     $("#blockinfo").css("display", "none");
+    $("#searchinfo").css("display", "none");
 
     $("#search-form").on("submit", on_new_search);
     $("#search-button").click(on_new_search);
@@ -104,6 +158,7 @@ $(function() {
         $("#getting-started").css("display", "none");
         $("#loading").css("display", "block");
         $("#blockinfo").css("display", "none");
+        $("#searchinfo").css("display", "none");
 
         var load_updater = setInterval(function() {
             $("#loading > div > div").width((PROGRESS * 100) + "%");
@@ -127,5 +182,15 @@ $(function() {
         load_before(start).then(function() {
             $("#load-more").removeClass("loading").removeAttr("disabled");
         });
+    });
+
+    $("#delete-search").on("click", function() {
+        var sel = $("#searchinfo").data("selector");
+        var idx = SELECTORS.indexOf(sel);
+        if (idx == -1) return;
+        SELECTORS.splice(idx, 1);
+        sel.badge.remove();
+        draw_timelines(DATA, SELECTORS);
+        $("#searchinfo").css("display", "none");
     });
 });

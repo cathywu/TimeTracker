@@ -102,7 +102,8 @@ body {
     padding: .25em .5em;
     border-radius: .5em;
     background: #eee;
-    margin: .25em;
+    margin: .25em .25em .25em 0;
+    cursor: pointer;
 }
 
 #searches > li > div {
@@ -161,25 +162,25 @@ body {
     margin-top: 2em;
 }
 
-#blockevents {
+.events {
     list-style-type: none;
     width: 100%;
     font-size: 12pt;
     margin-top: 1em;
 }
 
-#blockevents tr {
+.events tr {
     overflow: hidden;
     width: 100%;
 }
 
-#blockevents .title {
+.events .title {
     text-overflow: ellipsis;
     overflow: hidden;
     width: 100%;
 }
 
-#blockevents .counter {
+.events .counter {
     color: #444;
     width: 5ex;
     display: inline-block;
@@ -190,6 +191,20 @@ body {
 h2 {
     font-size: 18pt;
 }
+
+#searchinfo {
+    margin-top: 2em;
+}
+
+#searchinfo > header > button {
+    float: right;
+}
+
+#searchinfo table table {
+    width: 100%;
+    margin: 0 1em;
+}
+
 .group-unmatched {background: #888;}
 .group-0 {background: darkblue;}
 .group-1 {background: darkgreen;}
