@@ -37,30 +37,30 @@ function select_blocks(data, selectors) {
         }
     }
     
-    var last = -1;
+    var last = null;
     for (var i = 0; i < data.times.length; i++) {
         var date = data.times[i];
         var title = data.titles[i];
         var number = data.lengths[i];
 
-        if (last >= 0) {
-            if (selectors[last].cont(date, title, number)) {
-                push(date, selectors[j].group, number);
+        if (last) {
+            if (last.cont(date, title, number)) {
+                push(date, last.group, number);
                 continue;
             } else {
-                last = -1;
+                last = null;
             }
         }
 
-        for (var j in selectors) {
-            if (selectors[j].start(date, title, number)) {
-                last = j;
-                push(date, selectors[j].group, number);
+        for (var sel of selectors) {
+            if (sel.start(date, title, number)) {
+                last = sel;
+                push(date, sel.group, number);
                 break;
             }
         }
 
-        if (last < 0) {
+        if (!last) {
             push(date, "?", number);
         }
     }

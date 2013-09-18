@@ -41,11 +41,15 @@ function on_new_search(evt) {
     $("#search").val("");
 
     var cls = "group-" + SELECTORS.length;
+    var selector = parse_query(input, cls);
     var tile = $("<div/>").addClass(cls);
     var badge = $("<li></li>").text(input).append(tile);
 
     $("#searches").append(badge);
-    SELECTORS.push(new Selectors.RE(input, cls));
+    SELECTORS.splice(0, 0, selector);
+
+    selector.group = cls;
+    selector.badge = badge;
 
     draw_timelines(DATA, SELECTORS);
 }
