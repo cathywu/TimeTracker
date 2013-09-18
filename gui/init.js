@@ -44,8 +44,9 @@ function on_new_search(evt) {
     var selector = parse_query(input, cls);
     var tile = $("<div/>").addClass(cls);
     var badge = $("<li></li>").text(input).append(tile);
+    badge.data("selector", selector);
     badge.on("click", { data: DATA }, function(evt) {
-        on_click_search(selector, evt);
+        on_click_search(badge.data("selector"), evt);
     });
 
     $("#searches").append(badge);
@@ -76,7 +77,27 @@ function on_click_search(selector, evt) {
     var $block = $("#searchinfo");
     $block.data("selector", selector);
 
-    $block.find("h2").text(selector.text);
+    $block.find("#search-text").val(selector.text);
+    $block.find("#search-text").change(function() {
+        var sel = $("#searchinfo").data("selector");
+        var idx = SELECTORS.indexOf(sel);
+        if (idx == -1) return;
+
+        var newsel = parse_query($(this).val());
+        newsel.group = sel.group;
+        newsel.badge = sel.badge;
+        var $colorblock = sel.badge.find("div");
+        console.log(newsel.text);
+        sel.badge.text(newsel.text).append($colorblock);
+        SELECTORS[idx] = newsel;
+        $("#searchinfo").data("selector", newsel);
+        sel.badge.data("selector", newsel);
+        
+        draw_timelines(DATA, SELECTORS);
+        $("#blockinfo").css("display", "none");
+        sel.badge.click();
+    });
+    
     var $evts = $block.find("#searchevents");
     $evts.empty();
 
@@ -192,5 +213,6 @@ $(function() {
         sel.badge.remove();
         draw_timelines(DATA, SELECTORS);
         $("#searchinfo").css("display", "none");
+        $("#blockinfo").css("display", "none");
     });
 });

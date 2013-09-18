@@ -205,6 +205,11 @@ h2 {
     margin: 0 1em;
 }
 
+#search-text {
+    font-size: 18pt;
+    border: 0;
+}
+
 .group-unmatched {background: #888;}
 .group-0 {background: darkblue;}
 .group-1 {background: darkgreen;}
