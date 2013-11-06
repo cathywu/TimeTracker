@@ -17,12 +17,13 @@ Please edit this file to set up TimeTracker.  You'll need to:
 	<array>
             <string>/usr/bin/python</string>
             <string>/path/to/timetracker/src/timetracker.py</string>
-            <string>--file=/path/to/log/timetracker.log</string>
+            <string>--file=/path/to/log/timetracker.devicename.log</string>
 
             <!--
             Additional arguments would require adding more lines like:
+            (but remove the backslashes)
 
-            <string>--buffer=60</string>
+            <string>\-\-buffer=60</string>
 
             -->
 	</array>
