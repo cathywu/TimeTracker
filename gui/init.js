@@ -91,12 +91,12 @@ function on_click_search(selector, evt) {
         SELECTORS[idx] = newsel;
         $("#searchinfo").data("selector", newsel);
         sel.badge.data("selector", newsel);
-        
+
         draw_timelines(DATA, SELECTORS);
         $("#blockinfo").css("display", "none");
         sel.badge.click();
     });
-    
+
     var $evts = $block.find("#searchevents");
     $evts.empty();
 
@@ -172,7 +172,7 @@ $(function() {
     $("#searchinfo").css("display", "none");
 
     $("#search-form").on("submit", on_new_search);
-    $("#search-button").click(on_new_search);
+    $("#search-button").on("click", on_new_search);
 
     $("#file").on("change", function() {
         $("#getting-started").css("display", "none");
@@ -188,14 +188,15 @@ $(function() {
         if (!file) return;
 
         DATA = new TimeLog(file);
-        
+
         // The past one week of data
         var start = (moment().subtract('week', 1).endOf('day') + 1)/1000;
         load_before(start).then(function() {
             clearInterval(load_updater);
         });
     });
-    
+
+    $("#load-more").removeAttr("disabled");
     $("#load-more").on("click", function(evt) {
         $("#load-more").addClass("loading").attr("disabled", "disabled");
         var start = moment.unix(START).subtract('week', 1) / 1000;
