@@ -35,6 +35,10 @@ def get_backend(name):
         raise Exception("Can't identify the operating system.  "
                         "Please specify the OS on the command line")
 
+def process_escapes(s):
+    """ Decodes escapes like \\342\\200\\231 """
+    return bytes(s, "utf-8").decode("unicode_escape").encode("latin-1").decode("utf-8")
+
 @backend("x11")
 class X11:
     @staticmethod
@@ -51,7 +55,7 @@ class X11:
         if xprop_line.startswith(XPROP_PREFIX):
             name = xprop_line[len(XPROP_PREFIX):]
             name = name.strip().strip("\"")
-            return name
+            return process_escapes(name)
         elif xprop_line.startswith(XPROP_ERROR):
             return "<error>window name not found</error>"
         else:
