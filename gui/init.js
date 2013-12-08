@@ -87,7 +87,6 @@ function on_click_search(selector, evt) {
         newsel.group = sel.group;
         newsel.badge = sel.badge;
         var $colorblock = sel.badge.find("div");
-        console.log(newsel.text);
         sel.badge.text(newsel.text).append($colorblock);
         SELECTORS[idx] = newsel;
         $("#searchinfo").data("selector", newsel);
