@@ -79,7 +79,7 @@ def printer(buffer=None, file=sys.stdout):
     start_time = [time.time()] # List is a Python 2 hack
     buffered = []
 
-    def output(*args):
+    def output(arg):
         now = time.time()
         if buffer is None or \
            now - start_time[0] >= float(buffer) - .1: # Float tricks
@@ -88,8 +88,8 @@ def printer(buffer=None, file=sys.stdout):
                 file.write(*old_args)
                 file.write("\n")
 
-            file.write(*args)
-            file.write("\n")
+            file.write(arg.encode("utf-8"))
+            file.write(b"\n")
             file.flush()
             start_time[0] = now
             buffered[:] = []
@@ -137,8 +137,8 @@ def parse_args():
     parser.add_argument("-b", "--buffer",
                         help="How many seconds to buffer output lines for.")
 
-    parser.add_argument("-f", "--file", type=argparse.FileType("at"),
-                        default=sys.stdout,
+    parser.add_argument("-f", "--file", type=argparse.FileType("ab"),
+                        default=sys.stdout.buffer,
                         help="Which file to write output to.")
     
     return parser.parse_args()
