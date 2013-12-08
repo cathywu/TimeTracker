@@ -2,7 +2,7 @@ OS := $(shell uname -s)
 
 plist:
 	cp src/com.timetracker.plist ~/Library/LaunchAgents
-	$EDITOR ~/Library/LaunchAgents/com.timetracker.plist
+	${EDITOR} ~/Library/LaunchAgents/com.timetracker.plist
 	launchctl unload ~/Library/LaunchAgents/com.timetracker.plist
 	launchctl load ~/Library/LaunchAgents/com.timetracker.plist
 	launchctl start com.timetracker
