@@ -85,7 +85,7 @@ def printer(buffer=None, file=sys.stdout):
            now - start_time[0] >= float(buffer) - .1: # Float tricks
 
             for old_arg in buffered:
-                file.write(old_args)
+                file.write(old_arg)
                 file.write("\n")
 
             file.write(arg.encode("utf-8"))
