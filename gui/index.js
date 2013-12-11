@@ -1,3 +1,9 @@
+// This is a filler script for development.
+// It injects loaders for each JavaScript file.
+
+// You can use "make compile" to replace this file
+// with the concatenation of the files it loads.
+
 document.write("<script src='common.js'></script>")
 document.write("<script src='searching.js'></script>")
 document.write("<script src='blocks.js'></script>")
