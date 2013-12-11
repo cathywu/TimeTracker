@@ -2,7 +2,8 @@
 
 QUERIES = []
 DATA = null;
-START = null;
+START = 1e50;
+CDATA = null;
 
 function timerange_to_string(start, end) {
     var title = start.format("[On] ll");
@@ -41,12 +42,12 @@ function on_new_search(evt) {
     $("#search").val("");
 
     var cls = "group-" + QUERIES.length;
-    var q = new Query(input, DATA);
+    var q = new Query(input, CDATA);
 
     var tile = $("<div/>").addClass(cls);
     var badge = $("<li></li>").text(input).append(tile);
     badge.data("query", q);
-    badge.on("click", { data: DATA }, function(evt) {
+    badge.on("click", { data: CDATA }, function(evt) {
         on_click_search(badge.data("query"), evt);
     });
 
@@ -58,7 +59,9 @@ function on_new_search(evt) {
 
     $("#blockinfo").css("display", "none");
     $("#searchinfo").css("display", "none");
-    draw_timelines(DATA, QUERIES);
+    $("#time .timeline, #time .empty-timeline").remove();
+    for (var q of QUERIES) q.reset();
+    draw_timelines(CDATA, QUERIES);
 }
 
 function on_click_block(start, end, eventlist) {
@@ -93,7 +96,7 @@ function on_click_search(q, evt) {
         $("#searchinfo").data("query", q2);
         q.selector.badge.data("query", q2);
 
-        draw_timelines(DATA, QUERIES);
+        draw_timelines(CDATA, QUERIES);
         $("#blockinfo").css("display", "none");
         q.selector.badge.click();
     });
@@ -142,12 +145,15 @@ function on_click_search(q, evt) {
 }
 
 function load_before(date) {
+    var end = START;
     START = date;
     return DATA.read_before(date).then(function() {
+        CDATA = slice_data(DATA, date, moment()/1000);
+
         $("#loading").css("display", "none");
         $("#ui").css("display", "block");
 
-        draw_timelines(slice_data(DATA, date, moment()/1000), QUERIES);
+        draw_timelines(slice_data(CDATA, date, end), QUERIES);
         if (! DATA.start) {
             $("#load-more").hide();
         }
@@ -202,7 +208,7 @@ $(function() {
         if (idx == -1) return;
         QUERIES.splice(idx, 1);
         q.selector.badge.remove();
-        draw_timelines(DATA, QUERIES);
+        draw_timelines(CDATA, QUERIES);
         $("#searchinfo").css("display", "none");
         $("#blockinfo").css("display", "none");
     });

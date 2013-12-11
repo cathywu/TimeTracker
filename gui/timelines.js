@@ -71,7 +71,6 @@ function draw_timelines(data, res) {
     var last = data.times.length - 1;
     var end_time = data.times[last] + data.lengths[last];
 
-    $("#time .timeline, #time .empty-timeline").remove();
     var last_dots = false;
     mapPerDay(start_time, end_time, function(start_day, end_day) {
         var day = slice_data(data, start_day, end_day);
@@ -79,13 +78,13 @@ function draw_timelines(data, res) {
         if (day.times.length) {
             var elt = draw_timeline(day, start_day, end_day, res);
             last_dots = false;
-            $("#time").append(elt);
+            $("#load-more").after(elt);
         } else if (!last_dots) {
             var elt = $("<div></div>").addClass("empty-timeline");
             elt.text("1 day skipped");
             elt.data("days-skipped", 1);
             last_dots = elt;
-            $("#time").append(elt);
+            $("#load-more").after(elt);
         } else {
             var skipped = last_dots.data("days-skipped");
             last_dots.data("days-skipped", ++skipped);
@@ -96,12 +95,12 @@ function draw_timelines(data, res) {
 
 function mapPerDay(start_time, end_time, func) {
     var start = moment.unix(start_time).startOf("day");
-    var end = moment.unix(end_time).startOf("day").add("day", 1);
+    var end = moment.unix(end_time).startOf("day");
     var days = end.diff(start, "days");
-    end = start.clone().add("day", 1);
+    start = end.clone().subtract("day", 1);
 
     var out = [];
-    for (var i = 0; i < days; i++, start.add("d", 1), end.add('d', 1)) {
+    for (var i = 0; i < days; i++, start.subtract("d", 1), end.subtract('d', 1)) {
         out.push(func(start/1000, end/1000));
     }
     return out;

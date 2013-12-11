@@ -22,9 +22,16 @@ Selectors.RE.prototype.cont = Selectors.RE.prototype.start;
 function Query(text, data) {
     this.text = text;
     this.selector = this.parse(text);
-    this.blocks = [];
     this.data = data;
 
+    this.blocks = [];
+    this.total = 0;
+    this.hist = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+               , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+}
+
+Query.prototype.reset = function() {
+    this.blocks = [];
     this.total = 0;
     this.hist = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
