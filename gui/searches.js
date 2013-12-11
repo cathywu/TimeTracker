@@ -38,16 +38,18 @@ Query.prototype.parse = function(text) {
 }
 
 Query.prototype.block_to_events = function(block) {
-    return slice_data(block.start, block.end);
+    return slice_data(this.data, block.start, block.end);
 }
 
 Query.prototype.add_block = function(block_array) {
-    // First, we record the existence of this block
-    this.blocks.push(block_array);
-
+    // We begin by making a nice pretty object out of the array
     var block = { length: block_array[0],
                   start: block_array[2],
                   end: block_array[3] };
+
+    // First, we record the existence of this block
+    this.blocks.push(block);
+
     // Next, we add on the total time spent in this block
     this.total += block.end - block.start;
 
@@ -66,7 +68,7 @@ Query.prototype.add_block = function(block_array) {
         var head = 1 - ((block.start - prev_hour) / seconds_in_hour);
         this.hist[idx++] += head;
         prev_hour += seconds_in_hour;
-        
+
         while (prev_hour + seconds_in_hour < block.end) {
             this.hist[idx++] += 1;
         }

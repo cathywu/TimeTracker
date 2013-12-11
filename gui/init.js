@@ -102,18 +102,11 @@ function on_click_search(q, evt) {
     $evts.empty();
 
     // TODO : Dumb
-    var total_secs = 0;
-    var total_blocks = 0;
-    $(".timeline > ." + q.selector.group).each(function(block) {
-        var start = $(this).data("start");
-        var end = $(this).data("end");
-        var eventlist = slice_data(evt.data.data, start, end);
-
-        var block_secs = 0;
-        for (var seg_secs of eventlist.lengths) block_secs += seg_secs;
+    q.blocks.forEach(function(block) {
+        var eventlist = q.block_to_events(block);
 
         var $counter = $("<td/>").addClass("counter");
-        $counter.text(seconds_to_human_time(block_secs));
+        $counter.text(seconds_to_human_time(block.length));
         var $text = $("<td/>").addClass("title");
         $text.text("Looking at " + q.text);
         var $expand = $("<td/>").addClass("action");
@@ -139,13 +132,10 @@ function on_click_search(q, evt) {
             ctr = !ctr;
             evt.preventDefault();
         });
-
-        total_secs += block_secs;
-        total_blocks += 1;
     });
 
-    $block.find("#searchdetails .total_time").text(seconds_to_human_time(total_secs));
-    $block.find("#searchdetails .total_blocks").text(total_blocks);
+    $block.find("#searchdetails .total_time").text(seconds_to_human_time(q.total));
+    $block.find("#searchdetails .total_blocks").text(q.blocks.length);
 
     $("#blockinfo").css("display", "none");
     $("#searchinfo").css("display", "block");
