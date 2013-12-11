@@ -81,6 +81,14 @@ body {
     margin: 1px 0 0 0;
 }
 
+.timeline div {
+    cursor: pointer;
+}
+
+.timeline div.group-none {
+    cursor: default;
+}
+
 #search {
     width: calc(100% - 6em);
 }
