@@ -94,7 +94,7 @@ def printer(buffer=None, file=sys.stdout):
             start_time[0] = now
             buffered[:] = []
         else:
-            buffered.append(args)
+            buffered.append(arg)
 
     return output
 
