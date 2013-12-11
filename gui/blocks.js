@@ -1,18 +1,18 @@
 // Some utility functions on blocks; in particular, block selection
 // and padding is implemented here.
 
-function select_blocks(data, selectors) {
+function select_blocks(data, queries) {
     var blocks = [];
     var total = 0;
     var last_time = 0;
 
-    function push(time, type, number) {
+    function push(q, time, type, number) {
         start_time = time;
         end_time = start_time + number;
 
         if (!blocks.length) {
             last_time = end_time;
-            blocks.push([number, type, time, void(0)]);
+            blocks.push([number, type, time, void(0), q]);
             total += number;
         } else {
             if (start_time - last_time <= MIN_GAP) {
@@ -22,14 +22,18 @@ function select_blocks(data, selectors) {
                     total += number;
                 } else {
                     last[3] = start_time;
-                    blocks.push([number, type, start_time, void(0)]);
+                    if (last[4]) last[4].add_block(last);
+                    blocks.push([number, type, start_time, void(0), q]);
                     total += number;
                 }
             } else {
                 var skip = Math.round(start_time - last_time);
-                blocks[blocks.length - 1][3] = last_time;
-                blocks.push([skip, "", last_time, start_time]);
-                blocks.push([number, type, start_time, void(0)]);
+                var last = blocks[blocks.length - 1];
+                last[3] = last_time;
+                if (last[4]) last[4].add_block(last);
+
+                blocks.push([skip, "", last_time, start_time, null]);
+                blocks.push([number, type, start_time, void(0), q]);
                 total += skip + number;
             }
 
@@ -44,28 +48,31 @@ function select_blocks(data, selectors) {
         var number = data.lengths[i];
 
         if (last) {
-            if (last.cont(date, title, number)) {
-                push(date, last.group, number);
+            if (last.selector.cont(date, title, number)) {
+                push(last, date, last.selector.group, number);
                 continue;
             } else {
                 last = null;
             }
         }
 
-        for (var sel of selectors) {
+        for (var q of queries) {
+            var sel = q.selector;
             if (sel.start(date, title, number)) {
-                last = sel;
-                push(date, sel.group, number);
+                push(q, date, sel.group, number);
+                last = q;
                 break;
             }
         }
 
         if (!last) {
-            push(date, "?", number);
+            push(null, date, "?", number);
         }
     }
 
-    blocks[blocks.length - 1][3] = last_time;
+    var last = blocks[blocks.length - 1];
+    last[3] = last_time;
+    if (last[4]) last[4].add_block(last)
 
     return {blocks: blocks, total: total}
 }

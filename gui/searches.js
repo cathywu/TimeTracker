@@ -37,14 +37,17 @@ Query.prototype.parse = function(text) {
     return new Selectors.RE(text);
 }
 
-Query.prototype.block_to_events(block) {
+Query.prototype.block_to_events = function(block) {
     return slice_data(block.start, block.end);
 }
 
-Query.prototype.add_block(block) {
+Query.prototype.add_block = function(block_array) {
     // First, we record the existence of this block
-    this.blocks.push(block);
+    this.blocks.push(block_array);
 
+    var block = { length: block_array[0],
+                  start: block_array[2],
+                  end: block_array[3] };
     // Next, we add on the total time spent in this block
     this.total += block.end - block.start;
 
@@ -58,17 +61,17 @@ Query.prototype.add_block(block) {
     // lies across are likely not to be full hours.
 
     if (prev_hour + seconds_in_hour >= block.end) {
-        self.hist[idx] += block.length / seconds_in_hour;
+        this.hist[idx] += block.length / seconds_in_hour;
     } else {
         var head = 1 - ((block.start - prev_hour) / seconds_in_hour);
-        self.hist[idx++] += head;
+        this.hist[idx++] += head;
         prev_hour += seconds_in_hour;
         
         while (prev_hour + seconds_in_hour < block.end) {
-            self.hist[idx++] += 1;
+            this.hist[idx++] += 1;
         }
 
         var tail = (block.end - prev_hour) / seconds_in_hour;
-        self.hist[idx] += tail;
+        this.hist[idx] += tail;
     }
 }

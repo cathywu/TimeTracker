@@ -1,6 +1,6 @@
 // Initialization code; global variables and startup code.
 
-SELECTORS = []
+QUERIES = []
 DATA = null;
 START = null;
 
@@ -40,24 +40,25 @@ function on_new_search(evt) {
 
     $("#search").val("");
 
-    var cls = "group-" + SELECTORS.length;
-    var selector = parse_query(input);
+    var cls = "group-" + QUERIES.length;
+    var q = new Query(input, DATA);
+
     var tile = $("<div/>").addClass(cls);
     var badge = $("<li></li>").text(input).append(tile);
-    badge.data("selector", selector);
+    badge.data("query", q);
     badge.on("click", { data: DATA }, function(evt) {
-        on_click_search(badge.data("selector"), evt);
+        on_click_search(badge.data("query"), evt);
     });
 
     $("#searches").append(badge);
-    SELECTORS.splice(0, 0, selector);
+    QUERIES.splice(0, 0, q);
 
-    selector.group = cls;
-    selector.badge = badge;
+    q.selector.group = cls;
+    q.selector.badge = badge;
 
     $("#blockinfo").css("display", "none");
     $("#searchinfo").css("display", "none");
-    draw_timelines(DATA, SELECTORS);
+    draw_timelines(DATA, QUERIES);
 }
 
 function on_click_block(start, end, eventlist) {
@@ -73,28 +74,28 @@ function on_click_block(start, end, eventlist) {
     $("#blockinfo").css("display", "block");
 }
 
-function on_click_search(selector, evt) {
+function on_click_search(q, evt) {
     var $block = $("#searchinfo");
-    $block.data("selector", selector);
+    $block.data("query", q);
 
-    $block.find("#search-text").val(selector.text);
+    $block.find("#search-text").val(q.text);
     $block.find("#search-text").change(function() {
-        var sel = $("#searchinfo").data("selector");
-        var idx = SELECTORS.indexOf(sel);
+        var q = $("#searchinfo").data("query");
+        var idx = QUERIES.indexOf(sel);
         if (idx == -1) return;
 
-        var newsel = parse_query($(this).val());
-        newsel.group = sel.group;
-        newsel.badge = sel.badge;
-        var $colorblock = sel.badge.find("div");
-        sel.badge.text(newsel.text).append($colorblock);
-        SELECTORS[idx] = newsel;
-        $("#searchinfo").data("selector", newsel);
-        sel.badge.data("selector", newsel);
+        var q2 = new Query($(this).val());
+        q2.selector.group = q.selector.group;
+        q2.selector.badge = q.selector.badge;
+        var $colorblock = q.selector.badge.find("div");
+        q.selector.badge.text(q.text).append($colorblock);
+        QUERIES[idx] = q2;
+        $("#searchinfo").data("query", q2);
+        q.selector.badge.data("query", q2);
 
-        draw_timelines(DATA, SELECTORS);
+        draw_timelines(DATA, QUERIES);
         $("#blockinfo").css("display", "none");
-        sel.badge.click();
+        q.selector.badge.click();
     });
 
     var $evts = $block.find("#searchevents");
@@ -103,7 +104,7 @@ function on_click_search(selector, evt) {
     // TODO : Dumb
     var total_secs = 0;
     var total_blocks = 0;
-    $(".timeline > ." + selector.group).each(function(block) {
+    $(".timeline > ." + q.selector.group).each(function(block) {
         var start = $(this).data("start");
         var end = $(this).data("end");
         var eventlist = slice_data(evt.data.data, start, end);
@@ -114,7 +115,7 @@ function on_click_search(selector, evt) {
         var $counter = $("<td/>").addClass("counter");
         $counter.text(seconds_to_human_time(block_secs));
         var $text = $("<td/>").addClass("title");
-        $text.text("Looking at " + selector.text);
+        $text.text("Looking at " + q.text);
         var $expand = $("<td/>").addClass("action");
         var $row = $("<tr/>").append($counter).append($text).append($expand);
         $evts.append($row);
@@ -156,7 +157,7 @@ function load_before(date) {
         $("#loading").css("display", "none");
         $("#ui").css("display", "block");
 
-        draw_timelines(slice_data(DATA, date, moment()/1000), SELECTORS);
+        draw_timelines(slice_data(DATA, date, moment()/1000), QUERIES);
         if (! DATA.start) {
             $("#load-more").hide();
         }
@@ -206,12 +207,12 @@ $(function() {
     });
 
     $("#delete-search").on("click", function() {
-        var sel = $("#searchinfo").data("selector");
-        var idx = SELECTORS.indexOf(sel);
+        var q = $("#searchinfo").data("query");
+        var idx = QUERIES.indexOf(q);
         if (idx == -1) return;
-        SELECTORS.splice(idx, 1);
-        sel.badge.remove();
-        draw_timelines(DATA, SELECTORS);
+        QUERIES.splice(idx, 1);
+        q.selector.badge.remove();
+        draw_timelines(DATA, QUERIES);
         $("#searchinfo").css("display", "none");
         $("#blockinfo").css("display", "none");
     });
