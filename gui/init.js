@@ -140,6 +140,22 @@ function on_click_search(q, evt) {
     $block.find("#searchdetails .total_time").text(seconds_to_human_time(q.total));
     $block.find("#searchdetails .total_blocks").text(q.blocks.length);
 
+    // Draw the histogram
+    var cvs = $block.find("#searchdetails .search_histogram")[0];
+    cvs.width = cvs.width;
+
+    var max = 0
+    for (var i = 0; i < 24; i++) {
+        max = Math.max(q.hist[i], max);
+    }
+
+    var ctx = cvs.getContext("2d");
+    ctx.fillStyle = "#ccc";
+    for (var i = 0; i < 24; i++) {
+        var y = 100 - q.hist[i] / max * 80;
+        ctx.fillRect(41*i + 5, y, 40, q.hist[i] / max * 80);
+    }
+
     $("#blockinfo").css("display", "none");
     $("#searchinfo").css("display", "block");
 }

@@ -212,6 +212,10 @@ h2 {
     margin: 0 1em;
 }
 
+#searchinfo canvas {
+    background-color: #eee;
+}
+
 #search-text {
     font-size: 18pt;
     border: 0;
