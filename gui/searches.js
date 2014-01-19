@@ -63,7 +63,7 @@ Query.prototype.add_block = function(block_array) {
     // Next, we update the histogram
     var seconds_in_hour = 60 * 60;
     var prev_hour = Math.floor(block.start / seconds_in_hour) * seconds_in_hour;
-    var idx = (prev_hour / seconds_in_hour) % 24;
+    var idx = moment.unix(prev_hour).hour(); // Moment for timezones
 
     // There are a few cases here. The entire block may lie within
     // a given hour or not; and the first and last hour that the block
