@@ -214,6 +214,7 @@ h2 {
 
 #searchinfo canvas {
     background-color: #eee;
+    margin: 1em;
 }
 
 #search-text {

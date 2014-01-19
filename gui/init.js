@@ -114,18 +114,33 @@ function on_click_search(q, evt) {
 
     // Draw the histogram
     var cvs = $block.find("#searchdetails .search_histogram")[0];
+    var ctx = cvs.getContext("2d");
     cvs.width = cvs.width;
 
-    var max = 0
+    var max = 0;
     for (var i = 0; i < 24; i++) {
         max = Math.max(q.hist[i], max);
     }
 
-    var ctx = cvs.getContext("2d");
-    ctx.fillStyle = "#ccc";
+    // Draw guidelines
+    var maxs = max * 3600;
+    var unit = seconds_to_unit(maxs, 4);
+    var ucnt = unit_to_seconds(unit, Math.round(maxs / unit_to_seconds(unit, 4)));
+    var hgt = ucnt / maxs * 80;
+    ctx.strokeStyle = "#aaa";
+    ctx.beginPath();
+    for (var i = 1; i*hgt < 90; i++) {
+        ctx.moveTo(35, Math.round(100 - hgt*i) + .5);
+        ctx.lineTo(1000, Math.round(100 - hgt*i) + .5);
+        ctx.fillText(seconds_to_human_time(ucnt * i), 6,
+                     Math.round(100 - hgt*i + 5) + .5, 25);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = "#bbb";
     for (var i = 0; i < 24; i++) {
         var y = 100 - q.hist[i] / max * 80;
-        ctx.fillRect(41*i + 5, y, 40, q.hist[i] / max * 80);
+        ctx.fillRect(40*i + 41, y, 39, q.hist[i] / max * 80);
     }
 
     $("#blockinfo").css("display", "none");
