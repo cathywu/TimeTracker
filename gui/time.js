@@ -1,5 +1,6 @@
+Time = {Delta: {}, Range: {}, Unit: {}};
 
-function seconds_to_human_time(sec) {
+Time.Delta.toString = function(sec) {
     function round_one_decimal_place(val) {
         return Math.round(val * 10) / 10;
     }
@@ -17,7 +18,9 @@ function seconds_to_human_time(sec) {
     }
 }
 
-function seconds_to_unit(sec, n) {
+Time.Delta.toUnit = function(sec, n) {
+    n = n || 1;
+
     if (sec < 60*n) {
         return "s";
     } else if (sec < 60*60*n) {
@@ -27,9 +30,7 @@ function seconds_to_unit(sec, n) {
     }
 }
 
-function unit_to_seconds(u, n) {
-    n = n || 1;
-
+Time.unit = function(n, u) {
     if (u == "s") {
         return n;
     } else if (u == "m") {
@@ -39,7 +40,9 @@ function unit_to_seconds(u, n) {
     }
 }
 
-function timerange_to_string(start, end) {
+Time.Range.toString = function(start, end) {
+    start = moment.unix(start);
+    end = moment.unix(end);
     var title = start.format("[On] ll");
     if (end.diff(start) < 2*60*1000) {
         title += start.format(", [at] HH:mm [for] ") + end.from(start, true);

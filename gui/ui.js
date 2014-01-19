@@ -6,7 +6,7 @@ function add_events(eventlist, $evts) {
         var title = eventlist.titles[i];
         var number = eventlist.lengths[i];
 
-        var length = seconds_to_human_time(number);
+        var length = Time.Delta.toString(number);
 
         var $evt = $("<tr></tr>");
         $evt.append($("<td></td>").text(length).addClass("counter"));

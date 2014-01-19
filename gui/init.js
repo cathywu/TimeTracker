@@ -40,7 +40,7 @@ function on_click_block(start, end, eventlist) {
     var $block = $("#blockinfo");
     var $evts = $("#blockevents");
 
-    var head = $block.find("h2").text(timerange_to_string(start, end));
+    var head = $block.find("h2").text(Time.Range.toString(start, end));
 
     $evts.empty();
     add_events(eventlist, $evts);
@@ -81,7 +81,7 @@ function on_click_search(q, evt) {
         var eventlist = q.block_to_events(block);
 
         var $counter = $("<td/>").addClass("counter");
-        $counter.text(seconds_to_human_time(block.length));
+        $counter.text(Time.Delta.toString(block.length));
         var $text = $("<td/>").addClass("title");
         $text.text("Looking at " + q.text);
         var $expand = $("<td/>").addClass("action");
@@ -109,7 +109,7 @@ function on_click_search(q, evt) {
         });
     });
 
-    $block.find("#searchdetails .total_time").text(seconds_to_human_time(q.total));
+    $block.find("#searchdetails .total_time").text(Time.Delta.toString(q.total));
     $block.find("#searchdetails .total_blocks").text(q.blocks.length);
 
     // Draw the histogram
@@ -124,15 +124,15 @@ function on_click_search(q, evt) {
 
     // Draw guidelines
     var maxs = max * 3600;
-    var unit = seconds_to_unit(maxs, 4);
-    var ucnt = unit_to_seconds(unit, Math.round(maxs / unit_to_seconds(unit, 4)));
+    var unit = Time.Delta.toUnit(maxs, 4);
+    var ucnt = Time.unit(Math.round(maxs / Time.unit(4, unit)), unit);
     var hgt = ucnt / maxs * 80;
     ctx.strokeStyle = "#aaa";
     ctx.beginPath();
     for (var i = 1; i*hgt < 90; i++) {
         ctx.moveTo(35, Math.round(100 - hgt*i) + .5);
         ctx.lineTo(1000, Math.round(100 - hgt*i) + .5);
-        ctx.fillText(seconds_to_human_time(ucnt * i), 6,
+        ctx.fillText(Time.Delta.toString(ucnt * i), 6,
                      Math.round(100 - hgt*i + 5) + .5, 25);
     }
     ctx.stroke();
