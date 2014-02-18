@@ -44,10 +44,14 @@ class X11:
     @staticmethod
     def idle_time_ms():
         return int(call_process("xprintidle").strip())
+
+    @staticmethod
+    def _active_wid():
+        return call_process(["xdotool", "getwindowfocus"]).strip()
     
     @staticmethod
     def active_window_title():
-        focused_window_id = call_process(["xdotool", "getwindowfocus"]).strip()
+        focused_window_id = X11._active_wid()
         xprop_line = call_process(["xprop", "_NET_WM_NAME", "-id", focused_window_id])
     
         XPROP_PREFIX = "_NET_WM_NAME(UTF8_STRING) = "
@@ -57,7 +61,25 @@ class X11:
             name = name.strip().strip("\"")
             return process_escapes(name)
         elif xprop_line.startswith(XPROP_ERROR):
-            return "<error>window name not found</error>"
+            return "[ERROR Not Found]"
+        else:
+            sys.stderr.write("Cannot parse XPROP line: {}".format(repr(xprop_line)))
+            sys.stderr.flush()
+            return None
+
+    @staticmethod
+    def _active_pid():
+        focused_window_id = X11._active_wid()
+        pidstr = call_process(["xprop", "_NET_WM_PID", "-id", focused_window_id])
+
+        XPROP_PREFIX = "_NET_WM_PID(CARDINAL) = "
+        XPROP_ERROR = "_NET_WM_PID:  not found.\n"
+        if xprop_line.startswith(XPROP_PREFIX):
+            name = xprop_line[len(XPROP_PREFIX):]
+            name = name.strip().strip("\"")
+            return process_escapes(name)
+        elif xprop_line.startswith(XPROP_ERROR):
+            return "-1"
         else:
             sys.stderr.write("Cannot parse XPROP line: {}".format(repr(xprop_line)))
             sys.stderr.flush()
