@@ -15,7 +15,7 @@ Please edit this file to set up TimeTracker.  You'll need to:
 	<string>com.timetracker</string>
 	<key>ProgramArguments</key>
 	<array>
-            <string>/usr/bin/python</string>
+            <string>/usr/local/bin/python3</string>
             <string>/path/to/timetracker/src/timetracker.py</string>
             <string>--file=/path/to/log/timetracker.devicename.log</string>
 
