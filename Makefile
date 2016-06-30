@@ -1,6 +1,7 @@
 OS := $(shell uname -s)
 
 plist:
+	mkdir -p ~/Library/LaunchAgents
 	cp src/com.timetracker.plist ~/Library/LaunchAgents
 	${EDITOR} ~/Library/LaunchAgents/com.timetracker.plist
 	launchctl unload ~/Library/LaunchAgents/com.timetracker.plist
