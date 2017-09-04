@@ -40,7 +40,7 @@ function on_click_block(start, end, eventlist) {
     var $block = $("#blockinfo");
     var $evts = $("#blockevents");
 
-    var head = $block.find("h2").text(Time.Range.toString(start, end));
+    var head = $block.find("h2").text(Time.Range.toString(start / 1000, end / 1000));
 
     $evts.empty();
     add_events(eventlist, $evts);
