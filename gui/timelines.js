@@ -67,11 +67,11 @@ function draw_timeline(data, start_day, end_day, res) {
 }
 
 function draw_timelines(data, res) {
-    var start_time = data.times[0];
-    var last = data.times.length - 1;
-    var end_time = data.times[last] + data.lengths[last];
+    var start_time = data.start;
+    var end_time = data.end;
 
-    var last_dots = false;
+    var top_timeline = $("#load-more").next("div");
+    var last_dots = top_timeline.hasClass("empty-timeline") ? top_timeline : false;
     mapPerDay(start_time, end_time, function(start_day, end_day) {
         var day = slice_data(data, start_day, end_day);
 
