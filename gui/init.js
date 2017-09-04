@@ -29,6 +29,10 @@ function on_new_search(evt) {
     q.selector.group = cls;
     q.selector.badge = badge;
 
+    redraw();
+}
+
+function redraw() {
     $("#blockinfo").css("display", "none");
     $("#searchinfo").css("display", "none");
     $("#time .timeline, #time .empty-timeline").remove();
@@ -56,10 +60,10 @@ function on_click_search(q, evt) {
     $block.find("#search-text").val(q.text);
     $block.find("#search-text").change(function() {
         var q = $("#searchinfo").data("query");
-        var idx = QUERIES.indexOf(sel);
+        var idx = QUERIES.indexOf(q);
         if (idx == -1) return;
 
-        var q2 = new Query($(this).val());
+        var q2 = new Query($(this).val(), q.data);
         q2.selector.group = q.selector.group;
         q2.selector.badge = q.selector.badge;
         var $colorblock = q.selector.badge.find("div");
@@ -68,8 +72,7 @@ function on_click_search(q, evt) {
         $("#searchinfo").data("query", q2);
         q.selector.badge.data("query", q2);
 
-        draw_timelines(CDATA, QUERIES);
-        $("#blockinfo").css("display", "none");
+        redraw()
         q.selector.badge.click();
     });
 
