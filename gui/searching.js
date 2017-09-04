@@ -19,7 +19,11 @@ function binary_search(data, value, lean) {
             var left_key = data[left_idx];
             var right_key = data[right_idx];
 
-            if (value === left_key) {
+            if (value < left_key) {
+                return left_idx;
+            } else if (value > right_key) {
+                return right_key;
+            } else if (value === left_key) {
                 return left_idx;
             } else if (value === right_key) {
                 return right_idx;
@@ -61,7 +65,11 @@ function interpolation_search(data, value, lean) {
             var left_key = data[left_idx];
             var right_key = data[right_idx];
 
-            if (value === left_key) {
+            if (value < left_key) {
+                return left_idx;
+            } else if (value > right_key) {
+                return right_key;
+            } else if (value === left_key) {
                 return left_idx;
             } else if (value === right_key) {
                 return right_idx;
@@ -130,22 +138,27 @@ function array_search(data, value, lean) {
 
 function slice_data(data, start_t, end_t) {
     var left_idx  = array_search(data.times, start_t, "left");
-    var right_idx = array_search(data.times, end_t, "left");
-
-    // left_idx <= start_time, right_idx <= end_time
+    var right_idx = end_t ? array_search(data.times, end_t, "right") : data.times.length;
+    // left_idx <= start_time, right_idx >= end_time
     if (data.times[left_idx] + data.lengths[left_idx] <= start_t) {
         left_idx += 1;
     }
 
-    if (data.times[right_idx] + data.lengths[right_idx] <= start_t) {
-        return {times: [], titles: [], lengths: []};
-    }
+    var output = { times: [], titles: [], lengths: [], start: start_t, end: end_t || start_t };
 
-    var output = { times: null, titles: null, lengths: null };
-    output.times = data.times.subarray(left_idx, right_idx + 1);
-    output.titles = data.titles.slice(left_idx, right_idx + 1);
-    output.lengths = data.lengths.slice(left_idx, right_idx + 1);
-    if (output.times.length == 0) {return output;}
+    if (data.times[right_idx] + data.lengths[right_idx] <= start_t) return output;
+
+    output.times = data.times.slice(left_idx, right_idx);
+    output.titles = data.titles.slice(left_idx, right_idx);
+    output.lengths = data.lengths.slice(left_idx, right_idx);
+
+    if (output.times.length == 0) { return output; }
+
+    if (!end_t) {
+        end_t = output.times[output.times.length - 1] +
+            output.lengths[output.lengths.length - 1];
+        output.end = end_t;
+    }
 
     var last = output.times.length - 1;
 

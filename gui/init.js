@@ -2,7 +2,7 @@
 
 QUERIES = []
 DATA = null;
-START = 1e50;
+START = null;
 CDATA = null;
 
 function on_new_search(evt) {
