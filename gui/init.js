@@ -79,7 +79,8 @@ function on_click_search(q, evt) {
     var $evts = $block.find("#searchevents");
     $evts.empty();
 
-    // TODO : Dumb
+    describe_query(q, $evts);
+    /*
     q.blocks.forEach(function(block) {
         var eventlist = q.block_to_events(block);
 
@@ -111,6 +112,7 @@ function on_click_search(q, evt) {
             evt.preventDefault();
         });
     });
+    */
 
     $block.find("#searchdetails .total_time").text(Time.Delta.toString(q.total));
     $block.find("#searchdetails .total_blocks").text(q.blocks.length);
