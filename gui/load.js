@@ -29,6 +29,11 @@ TimeLog.prototype.read_file = function(start_byte, end_byte) {
 TimeLog.prototype.find_line = function(start_byte) {
     var promise = new jQuery.Deferred();
 
+    if (start_byte == 0) {
+        promise.resolveWith(this, [0]);
+        return promise;
+    }
+
     this.read_file(start_byte, start_byte + 128).then(function(buf) {
         var idx = buf.indexOf("\n");
 

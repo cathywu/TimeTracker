@@ -46,7 +46,7 @@ function binary_search(data, value, lean) {
         }
     }
 
-    var out = searcher(0, data.length-1);
+    var out = searcher(0, data.length);
     binary_search.times.count++;
     binary_search.times.sum += time / Math.log(data.length);
     return out;
