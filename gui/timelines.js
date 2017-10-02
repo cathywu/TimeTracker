@@ -46,7 +46,7 @@ function display_blocks(output_elt, data, res, blocks, total) {
 function click_block(evt) {
     var start = $(this).data("start");
     var end = $(this).data("end");
-    var eventlist = slice_data(evt.data.data, start, end);
+    var eventlist = evt.data.data.slice(start, end);
 
     on_click_block(moment.unix(start), moment.unix(end), eventlist);
 }
@@ -70,21 +70,21 @@ function draw_timelines(data, res) {
     var start_time = data.start;
     var end_time = data.end;
 
-    var top_timeline = $("#load-more").next("div");
+    var top_timeline = $("#time").children().first();
     var last_dots = top_timeline.hasClass("empty-timeline") ? top_timeline : false;
     mapPerDay(start_time, end_time, function(start_day, end_day) {
-        var day = slice_data(data, start_day, end_day);
+        var day = data.slice(start_day, end_day);
 
         if (day.times.length) {
             var elt = draw_timeline(day, start_day, end_day, res);
             last_dots = false;
-            $("#load-more").after(elt);
+            $("#time").prepend(elt);
         } else if (!last_dots) {
             var elt = $("<div></div>").addClass("empty-timeline");
             elt.text("1 day skipped");
             elt.data("days-skipped", 1);
             last_dots = elt;
-            $("#load-more").after(elt);
+            $("#time").prepend(elt);
         } else {
             var skipped = last_dots.data("days-skipped");
             last_dots.data("days-skipped", ++skipped);

@@ -45,7 +45,7 @@ Query.prototype.parse = function(text) {
 }
 
 Query.prototype.block_to_events = function(block) {
-    return slice_data(this.data, block.start, block.end);
+    return this.data.slice(block.start, block.end);
 }
 
 Query.prototype.add_block = function(block_array) {

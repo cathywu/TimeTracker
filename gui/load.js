@@ -1,4 +1,33 @@
 
+function TimeMerge() {
+    this.logs = []
+    for (var i = 0; i < arguments.length; i++) {
+        this.logs.push(arguments[i]);
+    }
+}
+
+TimeMerge.prototype.read_before = function(date) {
+    var that = this;
+    var promise = new jQuery.Deferred();
+
+    var num = that.logs.length;
+    for (var i = 0; i < that.logs.length; i++) {
+        that.logs[i].read_before(date).then(function() {
+            if (--num) promise.resolveWith(that);
+        });
+    }
+
+    return promise;
+}
+
+TimeMerge.prototype.done = function() {
+    var out = true;
+    for (var i = 0; i < this.logs.length; i++) {
+        out = (out && this.logs[i].done());
+    }
+    return out;
+}
+
 function TimeLog(file_store) {
     this.store = file_store;
 
@@ -163,4 +192,8 @@ TimeLog.prototype.read_before = function(time) {
         }
     });
     return promise;
+}
+
+TimeLog.prototype.done = function() {
+    return ! this.start;
 }

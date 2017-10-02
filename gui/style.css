@@ -41,6 +41,7 @@ body {
     display: none;
 }
 
+
 #loading {
     padding: 3em 10%;
     display: none;
@@ -120,11 +121,6 @@ body {
     height: 1em;
     margin: .15em 0 0 .5em;
     display: inline-block;
-}
-
-#load-more {
-    text-align: center;
-    float: right;
 }
 
 .timeline {
@@ -234,3 +230,8 @@ h2 {
 .group-7 {background: darkviolet;}
 .group-8 {background: forestgreen;}
 .group-9 {background: indigo;}
+
+#toolbar { text-align: right; }
+.file-button { display: inline; padding: 0; vertical-align: bottom; }
+.file-button button img { height: 20px; display: block; }
+.file-button > input[type=file] { display: none; }

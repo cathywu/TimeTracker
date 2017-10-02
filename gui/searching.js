@@ -144,7 +144,7 @@ function slice_data(data, start_t, end_t) {
         left_idx += 1;
     }
 
-    var output = { times: [], titles: [], lengths: [], start: start_t, end: end_t || start_t };
+    var output = new TimeSlice(start_t, end_t);
 
     if (data.times[right_idx] + data.lengths[right_idx] <= start_t) return output;
 
@@ -178,6 +178,67 @@ function slice_data(data, start_t, end_t) {
             output.titles.pop();
             output.lengths.pop();
         }
+    }
+
+    return output;
+}
+
+function TimeSlice(start_t, end_t) {
+    this.times = [];
+    this.titles = [];
+    this.lengths = [];
+    this.start = start_t;
+    this.end = (end_t || start_t);
+}
+
+TimeSlice.prototype.slice = function(start_t, end_t) {
+    return slice_data(this, start_t, end_t);
+}
+
+TimeLog.prototype.slice = function(start_t, end_t) {
+    return slice_data(this, start_t, end_t);
+}
+
+TimeMerge.prototype.slice = function(start_t, end_t) {
+    var slices = this.logs.map(function(x) { return x.slice(start_t, end_t) });
+    var indices = this.logs.map(function() { return 0; });
+    var out = 0;
+
+    // TODO: How to merge?
+    var output = new TimeSlice(start_t, end_t);
+
+    var done = false;
+    while (!done) {
+        done = true;
+        var min_t = false;
+        var min_idx = false;
+        for (var i = 0; i < slices.length; i++) {
+            if (slices[i].times.length > indices[i]) {
+                if (done || slices[i].times[indices[i]] < min_t) {
+                    min_t = slices[i].times[indices[i]];
+                    min_idx = i;
+                    done = false;
+                }
+            }
+        }
+
+        if (done) break;
+
+        for (var i = 0; i < slices.length; i++) {
+            if (i !== min_idx && slices[i].times.length > indices[i]) {
+                if (slices[i].times[indices[i]] <
+                    min_t + slices[min_idx].lengths[indices[min_idx]]) {
+                    console.error("Overlapping time slices", min_idx, "and", i,
+                                  [min_t, min_t + slices[min_idx].lengths[indices[min_idx]]],
+                                  [slices[i].times[indices[i]], slices[i].times[indices[i]] + slices[i].lengths[indices[i]]]);
+                }
+            }
+        }
+
+        output.times.push(slices[min_idx].times[indices[min_idx]])
+        output.titles.push(slices[min_idx].titles[indices[min_idx]])
+        output.lengths.push(slices[min_idx].lengths[indices[min_idx]])
+        indices[min_idx]++;
     }
 
     return output;

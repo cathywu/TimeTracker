@@ -156,15 +156,27 @@ function load_before(date) {
     var end = START;
     START = date;
     return DATA.read_before(date).then(function() {
-        CDATA = slice_data(DATA, date, moment()/1000);
+        CDATA = DATA.slice(date, moment()/1000);
 
         $("#loading").css("display", "none");
         $("#ui").css("display", "block");
 
-        draw_timelines(slice_data(CDATA, date, end), QUERIES);
-        if (! DATA.start) {
+        draw_timelines(CDATA.slice(date, end), QUERIES);
+        if (DATA.done()) {
             $("#load-more").hide();
         }
+    });
+}
+
+function add_file() {
+    var file = this.files[0];
+    if (!file) return;
+
+    var data2 = new TimeLog(file);
+    data2.read_before(START).then(function() {
+        DATA = new TimeMerge(DATA, data2);
+        CDATA = DATA.slice(START, moment()/1000);
+        redraw();
     });
 }
 
@@ -172,6 +184,12 @@ $(function() {
     $("#file-button").on("click", function() {
         $("#file")[0].click();
     });
+
+    $("#add-file-button").on("click", function() {
+        $(this).siblings("input[type=file]").click();
+    });
+
+    $("#add-file").on("change", add_file);
 
     $("#blockinfo").css("display", "none");
     $("#searchinfo").css("display", "none");
