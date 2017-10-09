@@ -199,13 +199,14 @@ TimeLog.prototype.slice = function(start_t, end_t) {
     return slice_data(this, start_t, end_t);
 }
 
-TimeMerge.prototype.slice = function(start_t, end_t) {
-    var slices = this.logs.map(function(x) { return x.slice(start_t, end_t) });
-    var indices = this.logs.map(function() { return 0; });
-    var out = 0;
+function merge_data(slices, output) {
+    var indices = slices.map(function() { return 0; });
 
-    // TODO: How to merge?
-    var output = new TimeSlice(start_t, end_t);
+    var out = 0;
+    var len = slices.map(function(x) { return x.times.length; }).reduce(function(a, b) { return a + b; });
+    output.times = new Float64Array(len);
+    output.lengths = new Int32Array(len);
+    output.titles = new Array(len);
 
     var done = false;
     while (!done) {
@@ -235,11 +236,19 @@ TimeMerge.prototype.slice = function(start_t, end_t) {
             }
         }
 
-        output.times.push(slices[min_idx].times[indices[min_idx]])
-        output.titles.push(slices[min_idx].titles[indices[min_idx]])
-        output.lengths.push(slices[min_idx].lengths[indices[min_idx]])
+        output.times[out] = slices[min_idx].times[indices[min_idx]];
+        output.lengths[out] = slices[min_idx].lengths[indices[min_idx]];
+        output.titles[out] = slices[min_idx].titles[indices[min_idx]];
         indices[min_idx]++;
+        out++;
     }
 
     return output;
+
+}
+
+TimeMerge.prototype.slice = function(start_t, end_t) {
+    var slices = this.logs.map(function(x) { return x.slice(start_t, end_t) });
+    var output = new TimeSlice(start_t, end_t);
+    return merge_data(slices, output);
 }
