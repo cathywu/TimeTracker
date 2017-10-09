@@ -131,7 +131,7 @@ def track(opts):
     if title:
         now = time.localtime()
         now_iso = time.strftime("%Y-%m-%d %H:%M:%S")
-        opts.output("{}\t{}".format(now_iso, title))
+        opts.output("{}\t{}".format(now_iso, title.replace("\n", "\\n")))
     else:
         pass
 
