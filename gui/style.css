@@ -232,6 +232,7 @@ h2 {
 .group-9 {background: indigo;}
 
 #toolbar { text-align: right; }
+#toolbar button { min-height: 30px; padding: 3px; vertical-align: bottom; }
 .file-button { display: inline; padding: 0; vertical-align: bottom; }
 .file-button button img { height: 20px; display: block; }
 .file-button > input[type=file] { display: none; }
