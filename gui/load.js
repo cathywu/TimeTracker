@@ -137,6 +137,7 @@ TimeLog.prototype.parse_data = function(data) {
         var parts = lines[i].split("\t");
         if (parts.length < 2) continue;
         var date = parse_date(parts[0]);
+        if (date !== date) { continue; } // Skip corrupted lines
         var title = parts[1];
 
         if (title == last_title && date - last_date <= 10) {
