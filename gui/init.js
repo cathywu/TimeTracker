@@ -173,8 +173,13 @@ function add_file() {
     if (!file) return;
 
     var data2 = new TimeLog(file);
-    data2.read_before(START).then(function() {
+    if (DATA instanceof TimeMerge) {
+        DATA.logs.merge(data2);
+    } else {
         DATA = new TimeMerge(DATA, data2);
+    }
+
+    DATA.read_before(START).then(function() {
         CDATA = DATA.slice(START, moment()/1000);
         redraw();
     });

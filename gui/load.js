@@ -6,6 +6,10 @@ function TimeMerge() {
     }
 }
 
+TimeMerge.prototype.merge = function(log) {
+    this.logs.push(log);
+}
+
 TimeMerge.prototype.read_before = function(date) {
     var that = this;
     var promise = new jQuery.Deferred();
