@@ -177,7 +177,7 @@ function add_file() {
 
     var data2 = new TimeLog(file);
     if (DATA instanceof TimeMerge) {
-        DATA.logs.merge(data2);
+        DATA.merge(data2);
     } else {
         DATA = new TimeMerge(DATA, data2);
     }
