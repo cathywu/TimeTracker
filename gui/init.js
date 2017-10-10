@@ -142,10 +142,13 @@ function on_click_search(q, evt) {
     }
     ctx.stroke();
 
-    ctx.fillStyle = "#bbb";
+    ctx.textAlign = "center";
     for (var i = 0; i < 24; i++) {
         var y = 100 - q.hist[i] / max * 80;
+        ctx.fillStyle = "#bbb";
         ctx.fillRect(40*i + 41, y, 39, q.hist[i] / max * 80);
+        ctx.fillStyle = "#888";
+        ctx.fillText((i < 10 ? "0" : "") + i + ":00", 40*i + 60, 98);
     }
 
     $("#blockinfo").css("display", "none");
