@@ -190,8 +190,15 @@ function merge_data(slices, output) {
         output.times[out] = slices[min_idx].times[indices[min_idx]];
         output.lengths[out] = slices[min_idx].lengths[indices[min_idx]];
         output.titles[out] = slices[min_idx].titles[indices[min_idx]];
+
+        if (out && output.titles[out] == output.titles[out - 1] &&
+            output.times[out - 1] + output.lengths[out - 1] == output.times[out]) {
+            output.lengths[out - 1] += output.lengths[out];
+        } else {
+            out++;
+        }
+
         indices[min_idx]++;
-        out++;
     }
 
     return output;
