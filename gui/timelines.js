@@ -95,7 +95,7 @@ function draw_timelines(data, res) {
 
 function mapPerDay(start_time, end_time, func) {
     var start = moment.unix(start_time).startOf("day");
-    var end = moment.unix(end_time).startOf("day").add("day", 1);
+    var end = moment.unix(end_time).subtract("second", 1).startOf("day").add("day", 1);
     var days = end.diff(start, "days");
     start = end.clone().subtract("day", 1);
 
