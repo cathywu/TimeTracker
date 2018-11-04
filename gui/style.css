@@ -130,13 +130,18 @@ body {
     clear: both;
 }
 
-.timeline:before {
-    content: attr(title);
+.timeline time {
     font-size: 8pt;
     position: absolute;
     font-family: sans;
     min-width: 3em;
     left: -2.5em;
+}
+
+.timeline time.clickable:hover {
+    color: #444;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .timeline div {
@@ -232,6 +237,9 @@ h2 {
 .group-9 {background: indigo;}
 
 #toolbar { text-align: right; }
+#toolbar h1 { float: left; font-size: 30px; font-weight: lighter; }
+#toolbar h1 span + span:before { content: "›"; margin: 0 1ex; }
+#toolbar h1 span:hover { color: #444; text-decoration: underline; cursor: pointer; }
 #toolbar button { min-height: 30px; padding: 3px; vertical-align: bottom; }
 .file-button { display: inline; padding: 0; vertical-align: bottom; }
 .file-button button img { height: 20px; display: block; }

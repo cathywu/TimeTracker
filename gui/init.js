@@ -4,6 +4,8 @@ QUERIES = []
 DATA = null;
 START = null;
 CDATA = null;
+STEP = "day";
+CRUMBS = [];
 
 function on_new_search(evt) {
     evt.preventDefault();
@@ -14,12 +16,12 @@ function on_new_search(evt) {
     $("#search").val("");
 
     var cls = "group-" + QUERIES.length;
-    var q = new Query(input, CDATA);
+    var q = new Query(input, DATA);
 
     var tile = $("<div/>").addClass(cls);
     var badge = $("<li></li>").text(input).append(tile);
     badge.data("query", q);
-    badge.on("click", { data: CDATA }, function(evt) {
+    badge.on("click", function(evt) {
         on_click_search(badge.data("query"), evt);
     });
 
@@ -32,12 +34,35 @@ function on_new_search(evt) {
     redraw();
 }
 
-function redraw() {
+function redraw(step) {
     $("#blockinfo").css("display", "none");
     $("#searchinfo").css("display", "none");
     $("#time .timeline, #time .empty-timeline").remove();
+    $("#toolbar h1 span").remove();
+    for (var i = 0; i < CRUMBS.length; i++) {
+        var crumb = CRUMBS[i];
+        var crumb_ = $("<span></span>").text(crumb.name);
+        crumb_.data("index", i);
+        crumb_.on("click", on_click_crumb);
+        $("#toolbar h1").append(crumb_);
+    }
     for (var q of QUERIES) q.reset();
-    draw_timelines(CDATA, QUERIES);
+    draw_timelines(CDATA, QUERIES, STEP);
+}
+
+MIN_GAPS = { "day": 15 * 60, "hour": 60 };
+
+function on_click_crumb(evt) {
+    CRUMBS = CRUMBS.slice(0, $(this).data("index") + 1);
+    goto_crumb(CRUMBS[$(this).data("index")]);
+}
+
+function goto_crumb(crumb) {
+    console.log("slicing", crumb.start, crumb.end);
+    CDATA = DATA.slice(crumb.start, crumb.end);
+    STEP = crumb.step;
+    MIN_GAP = MIN_GAPS[crumb.step];
+    redraw();
 }
 
 function on_click_block(start, end, eventlist) {
@@ -160,11 +185,20 @@ function load_before(date) {
     START = date;
     return DATA.read_before(date).then(function() {
         CDATA = DATA.slice(date, moment()/1000);
+        crumb = {
+            start: date,
+            end: moment() / 1000,
+            step: "day",
+            name: "TimeTracker",
+        };
+        CRUMBS[0] = crumb;
 
         $("#loading").css("display", "none");
         $("#ui").css("display", "block");
 
-        draw_timelines(CDATA.slice(date, end), QUERIES);
+        if (CRUMBS.length == 1) {
+            draw_timelines(CDATA.slice(date, end), QUERIES);
+        }
         if (DATA.done()) {
             $("#load-more").hide();
         }
