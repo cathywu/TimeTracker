@@ -242,6 +242,7 @@ $(function() {
         if (idx == -1) return;
         QUERIES.splice(idx, 1);
         q.selector.badge.remove();
+        $("#time .timeline, #time .empty-timeline").remove();
         draw_timelines(CDATA, QUERIES);
         $("#searchinfo").css("display", "none");
         $("#blockinfo").css("display", "none");
