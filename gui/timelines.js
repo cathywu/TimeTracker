@@ -51,7 +51,12 @@ function click_block(evt) {
     on_click_block(moment.unix(start), moment.unix(end), eventlist);
 }
 
-function draw_timeline(data, start_day, end_day, res) {
+FORMATS = {
+    "day": "MMM Do",
+    "hour": "H:mm",
+}
+
+function draw_timeline(data, start_day, end_day, res, format) {
     function draw_blocks(output_elt, data, res) {
         var ret = select_blocks(data, res);
         var padding = pad_blocks_day(ret.blocks, start_day, end_day);
@@ -59,48 +64,51 @@ function draw_timeline(data, start_day, end_day, res) {
     }
 
     var output_elt = $("<div></div>").addClass("timeline");
-    output_elt.attr("title", moment.unix(start_day).format("MMM Do"));
+    output_elt.attr("title", moment.unix(start_day).format(format));
 
     draw_blocks(output_elt, data, res);
 
     return output_elt;
 }
 
-function draw_timelines(data, res) {
+function draw_timelines(data, res, step) {
+    step = step || "day";
     var start_time = data.start;
     var end_time = data.end;
 
     var top_timeline = $("#time").children().first();
     var last_dots = top_timeline.hasClass("empty-timeline") ? top_timeline : false;
-    mapPerDay(start_time, end_time, function(start_day, end_day) {
+    console.log(start_time, end_time);
+    mapPer(step, start_time, end_time, function(start_day, end_day) {
+        console.log(start_day, end_day);
         var day = data.slice(start_day, end_day);
 
         if (day.times.length) {
-            var elt = draw_timeline(day, start_day, end_day, res);
+            var elt = draw_timeline(day, start_day, end_day, res, FORMATS[step]);
             last_dots = false;
             $("#time").prepend(elt);
         } else if (!last_dots) {
             var elt = $("<div></div>").addClass("empty-timeline");
-            elt.text("1 day skipped");
-            elt.data("days-skipped", 1);
+            elt.text("1 " + step + " skipped");
+            elt.data("skipped", 1);
             last_dots = elt;
             $("#time").prepend(elt);
         } else {
-            var skipped = last_dots.data("days-skipped");
-            last_dots.data("days-skipped", ++skipped);
-            last_dots.text(skipped + " days skipped");
+            var skipped = last_dots.data("skipped");
+            last_dots.data("skipped", ++skipped);
+            last_dots.text(skipped + " " + step + " skipped");
         }
     });
 }
 
-function mapPerDay(start_time, end_time, func) {
-    var start = moment.unix(start_time).startOf("day");
-    var end = moment.unix(end_time).subtract("second", 1).startOf("day").add("day", 1);
-    var days = end.diff(start, "days");
-    start = end.clone().subtract("day", 1);
+function mapPer(step, start_time, end_time, func) {
+    var start = moment.unix(start_time).startOf(step);
+    var end = moment.unix(end_time).subtract("ms", 1).startOf(step).add(step, 1);
+    var days = end.diff(start, step + "s");
+    start = end.clone().subtract(step, 1);
 
     var out = [];
-    for (var i = 0; i < days; i++, start.subtract("d", 1), end.subtract('d', 1)) {
+    for (var i = 0; i < days; i++, start.subtract(step, 1), end.subtract(step, 1)) {
         out.push(func(start/1000, end/1000));
     }
     return out;
