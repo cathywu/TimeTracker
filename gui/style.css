@@ -197,10 +197,6 @@ body {
     padding-right: .4em;
 }
 
-h2 {
-    font-size: 18pt;
-}
-
 #searchinfo {
     margin-top: 2em;
 }
@@ -219,7 +215,9 @@ h2 {
     margin: 1em;
 }
 
-#search-text {
+h2, #search-text {
+    font-family: "Cantarell", "Helvetica", sans;
+    font-weight: normal;
     font-size: 18pt;
     border: 0;
 }
