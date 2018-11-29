@@ -47,20 +47,25 @@ function select_blocks(data, queries) {
         var title = data.titles[i];
         var number = data.lengths[i];
         var tail = []
+        var tail_start = -1;
 
         if (last) {
             if (last.selector.start(date, title, number)) {
-                push(last, date, last.id, number);
-                continue;
-            } else if (last.selector.cont(date, title, number)) {
-                tail.push([date, number]);
-                continue;
-            } else {
                 for (var j = 0; j < tail.length; j++) {
                     push(last, tail[j][0], last.id, tail[j][1]);
                 }
                 tail = [];
+                tail_start = -1;
+                push(last, date, last.id, number);
+                continue;
+            } else if (last.selector.cont(date, title, number)) {
+                if (tail_start < 0) tail_start = i;
+                tail.push([date, number]);
+                continue;
+            } else {
+                if (tail_start >= 0) i = tail_start;
                 last = null;
+                continue;
             }
         }
 
