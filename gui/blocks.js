@@ -49,7 +49,7 @@ function select_blocks(data, queries) {
 
         if (last) {
             if (last.selector.cont(date, title, number)) {
-                push(last, date, last.selector.group, number);
+                push(last, date, last.id, number);
                 continue;
             } else {
                 last = null;
@@ -59,7 +59,7 @@ function select_blocks(data, queries) {
         for (var q of queries) {
             var sel = q.selector;
             if (sel.start(date, title, number)) {
-                push(q, date, sel.group, number);
+                push(q, date, q.id, number);
                 last = q;
                 break;
             }

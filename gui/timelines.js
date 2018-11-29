@@ -13,7 +13,7 @@ function display_blocks(output_elt, data, res, blocks, total) {
         switch (block[1]) {
             case "":  cssname = "group-none", name  = ""; break;
             case "?": cssname = "group-unmatched", name = "unmatched"; break;
-            default: cssname = block[1], name  = res[block[1]]; break;
+            default: cssname = "group-" + ("" + block[1]).substr(-1), name  = res[block[1]]; break;
         }
         obj.attr("title", name);
         obj.css("width", (block[0] / total * 100) + "%");
