@@ -15,7 +15,9 @@ Selectors.RE.prototype.start = function(date, title, number) {
     return title.search(this.re) > -1;
 };
 
-Selectors.RE.prototype.cont = Selectors.RE.prototype.start;
+Selectors.RE.prototype.cont = function(d, t, n) {
+    return false;
+};
 
 // A Query is a selector and the selected blocks.
 
@@ -24,6 +26,7 @@ function Query(text, id, data) {
     this.id = id;
     this.selector = this.parse(text);
     this.data = data;
+    this.name = text;
 
     this.blocks = [];
     this.total = 0;

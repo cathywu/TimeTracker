@@ -33,7 +33,7 @@ function on_new_search(evt) {
     var q = new Query(input, id, DATA);
 
     var tile = $("<div/>").addClass("group-" + ("" + id).substr(-1));
-    var badge = $("<li></li>").text(input).append(tile);
+    var badge = $("<li></li>").text(q.name).append(tile);
     badge.data("query", q);
     badge.on("click", function(evt) {
         on_click_search(badge.data("query"), evt);

@@ -46,12 +46,20 @@ function select_blocks(data, queries) {
         var date = data.times[i];
         var title = data.titles[i];
         var number = data.lengths[i];
+        var tail = []
 
         if (last) {
-            if (last.selector.cont(date, title, number)) {
+            if (last.selector.start(date, title, number)) {
                 push(last, date, last.id, number);
                 continue;
+            } else if (last.selector.cont(date, title, number)) {
+                tail.push([date, number]);
+                continue;
             } else {
+                for (var j = 0; j < tail.length; j++) {
+                    push(last, tail[j][0], last.id, tail[j][1]);
+                }
+                tail = [];
                 last = null;
             }
         }
