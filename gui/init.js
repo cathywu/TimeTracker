@@ -72,7 +72,6 @@ function on_click_crumb(evt) {
 }
 
 function goto_crumb(crumb) {
-    console.log("slicing", crumb.start, crumb.end);
     CDATA = DATA.slice(crumb.start, crumb.end);
     STEP = crumb.step;
     MIN_GAP = MIN_GAPS[crumb.step];
