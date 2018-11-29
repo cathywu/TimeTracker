@@ -85,7 +85,8 @@ function on_click_block(start, end, eventlist) {
     var head = $block.find("h2").text(Time.Range.toString(start / 1000, end / 1000));
 
     $evts.empty();
-    add_events(eventlist, $evts);
+    var total = add_events(eventlist, $evts);
+    $block.find(".total_time").text(Time.Delta.toString(total));
 
     $("#searchinfo").css("display", "none");
     $("#blockinfo").css("display", "block");
