@@ -19,8 +19,9 @@ Selectors.RE.prototype.cont = Selectors.RE.prototype.start;
 
 // A Query is a selector and the selected blocks.
 
-function Query(text, data) {
+function Query(text, id, data) {
     this.text = text;
+    this.id = id;
     this.selector = this.parse(text);
     this.data = data;
 

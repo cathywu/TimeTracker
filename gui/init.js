@@ -7,6 +7,20 @@ CDATA = null;
 STEP = "day";
 CRUMBS = [];
 
+function new_query_id(QUERIES) {
+    for (var i = 0; i <= QUERIES.length; i++) {
+        var found = false;
+        for (var j = 0; j < QUERIES.length; j++) {
+            if (QUERIES[j].id == i) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) return i;
+    }
+    // Guaranteed to return by pigeon-hole principle
+}
+
 function on_new_search(evt) {
     evt.preventDefault();
     var input = $("#search").val();
@@ -15,10 +29,10 @@ function on_new_search(evt) {
 
     $("#search").val("");
 
-    var cls = "group-" + QUERIES.length;
-    var q = new Query(input, DATA);
+    var id = new_query_id(QUERIES);
+    var q = new Query(input, id, DATA);
 
-    var tile = $("<div/>").addClass(cls);
+    var tile = $("<div/>").addClass("group-" + ("" + id).substr(-1));
     var badge = $("<li></li>").text(input).append(tile);
     badge.data("query", q);
     badge.on("click", function(evt) {
@@ -28,7 +42,7 @@ function on_new_search(evt) {
     $("#searches").append(badge);
     QUERIES.splice(0, 0, q);
 
-    q.selector.group = cls;
+    q.selector.group = id;
     q.selector.badge = badge;
 
     redraw();
@@ -88,7 +102,7 @@ function on_click_search(q, evt) {
         var idx = QUERIES.indexOf(q);
         if (idx == -1) return;
 
-        var q2 = new Query($(this).val(), q.data);
+        var q2 = new Query($(this).val(), q.id, q.data);
         q2.selector.group = q.selector.group;
         q2.selector.badge = q.selector.badge;
         var $colorblock = q.selector.badge.find("div");
