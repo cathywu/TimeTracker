@@ -62,6 +62,18 @@ function redraw(step) {
     }
     for (var q of QUERIES) q.reset();
     draw_timelines(CDATA, QUERIES, STEP);
+    draw_saved_searches();
+}
+
+function draw_saved_searches() {
+    var searches = JSON.parse(window.localStorage.getItem("searches") || "[]");
+    var $ul = $("#saved-searches ul");
+    $ul.empty()
+    console.log(searches);
+    for (var i = 0; i < searches.length; i++) {
+        console.log(searches[i]);
+        $ul.append($("<li></li>").text(searches[i]));
+    }
 }
 
 MIN_GAPS = { "day": 15 * 60, "hour": 60 };
@@ -119,6 +131,12 @@ function on_click_search(q, evt) {
     $evts.empty();
 
     describe_query(q, $evts);
+    if (JSON.parse(window.localStorage.getItem("searches") || "[]").indexOf(q.text) !== -1) {
+        $("#save-search").text("Unsave");
+    } else {
+        $("#save-search").text("Save");
+    }
+
     /*
     q.blocks.forEach(function(block) {
         var eventlist = q.block_to_events(block);
@@ -211,7 +229,7 @@ function load_before(date) {
         $("#ui").css("display", "block");
 
         if (CRUMBS.length == 1) {
-            draw_timelines(CDATA.slice(date, end), QUERIES);
+            redraw();
         }
         if (DATA.done()) {
             $("#load-more").hide();
@@ -291,5 +309,17 @@ $(function() {
         QUERIES.splice(idx, 1);
         q.selector.badge.remove();
         redraw();
+    });
+
+    $("#save-search").on("click", function() {
+        var search = $("#searchinfo").data("query").text;
+        var saved = JSON.parse(window.localStorage.getItem("searches") || "[]");
+        var idx;
+        if ((idx = saved.indexOf(search)) == -1) {
+            saved.push(search);
+        } else {
+            saved.splice(idx, 1);
+        }
+        window.localStorage.setItem("searches", JSON.stringify(saved));
     });
 });

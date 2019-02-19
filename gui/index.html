@@ -43,7 +43,7 @@
       </div>
 
       <form id="search-form">
-        <input id="search" type="search" default="Regex Search" />
+        <input id="search" type="search" placeholder="Regex Search" />
         <button id="search-button" type="button">Search</button>
         <ul id="searches">
         </ul>
@@ -62,6 +62,7 @@
       <div id="searchinfo">
         <header>
           <button type="button" id="delete-search">Delete</button>
+          <button type="button" id="save-search">Save</button>
           <input value="Search" id="search-text" />
         </header>
         <section id="searchdetails">
@@ -71,6 +72,12 @@
         </section>
         <table id="searchevents" class="events">
         </table>
+      </div>
+
+      <div id="saved-searches">
+        <h2>Saved Searches</h2>
+        <ul>
+        </ul>
       </div>
     </div>
 </html>

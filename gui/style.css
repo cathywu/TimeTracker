@@ -201,9 +201,7 @@ body {
     margin-top: 2em;
 }
 
-#searchinfo > header > button {
-    float: right;
-}
+#searchinfo > header > button { float: right; margin-left: 1ex; }
 
 #searchinfo table table {
     width: 100%;
@@ -212,8 +210,11 @@ body {
 
 #searchinfo canvas {
     background-color: #eee;
-    margin: 1em;
+    margin: 1em 0;
 }
+
+#saved-searches ul { font-family: monospace; list-style: none; }
+#saved-searches li { margin: .5em 0; }
 
 h2, #search-text {
     font-family: "Cantarell", "Helvetica", sans;
